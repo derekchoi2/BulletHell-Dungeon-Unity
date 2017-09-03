@@ -13,18 +13,14 @@ public class Enemy : MonoBehaviour {
 	protected GameController gc;
 	protected float shotTimer = 0f;
 	protected float nextShot;
+	protected List<GameObject> projectiles;
 
-	protected void FireProjectile(){
-		BasicProjectile newProjectile = Instantiate (projectile, transform.position, transform.rotation).GetComponent<BasicProjectile>();
-		newProjectile.owner = BasicProjectile.Owner.Enemy;
-		Vector3 dir = PlayerController.Instance.transform.position - transform.position;
-		newProjectile.SetVelocity (dir.normalized * projectilespeed * Time.deltaTime);
-	}
+	protected virtual void FireProjectile(){}
 
 	protected void ProjectileTimer(){
 		shotTimer = shotTimer + Time.deltaTime;
 
-		if (shotTimer > nextShot)
+		if (shotTimer > nextShot && PlayerController.Instance != null)
 		{
 			nextShot = shotTimer + timeBetweenShots;
 			FireProjectile ();
@@ -46,9 +42,17 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Player) {
 			//player projectile collide with Enemy
-			gc.EnemyHit(gameObject);
+			EnemyController.Instance.EnemyHit(gameObject);
+			projectiles.Remove (collider.gameObject);
 			Destroy (collider.gameObject); //destroy projectile
 		}
+	}
+
+	public void ClearProjectiles(){
+		foreach (GameObject projectile in projectiles) {
+			Destroy (projectile);
+		}
+		projectiles.Clear ();
 	}
 
 }

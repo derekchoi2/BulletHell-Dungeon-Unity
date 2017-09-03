@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class Pickup : MonoBehaviour {
 
 	public PickupTypes type;
-	public float value = -0.1f;
+	public float value = -0.02f;
 	public string displayText;
-	public GameObject textObject;
 
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag("Player")){
 			//collide with player
-			GameController.Instance.PickupText(textObject, transform.position, displayText);
+			PickupController.Instance.ShowPickupText(transform.position, displayText);
+			Destroy (gameObject);
 		}
 	}
 }

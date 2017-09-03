@@ -12,10 +12,21 @@ public class BasicEnemy : Enemy {
 
 	// Use this for initialization
 	void Start () {
+		projectiles = new List<GameObject> ();
 		nextShot = timeBetweenShots;
 		gc = GameController.Instance;
 		StartCoroutine (UpdateVelocityTimer ());
 		transform.position = GameController.Instance.RandomPosition();
+	}
+
+	protected override void FireProjectile(){
+		GameObject newProjectile = Instantiate (projectile, transform.position, transform.rotation);
+		BasicProjectile newProjectileScript = newProjectile.GetComponent<BasicProjectile> ();
+		newProjectileScript.owner = BasicProjectile.Owner.Enemy;
+		Vector3 dir = PlayerController.Instance.transform.position - transform.position;
+		newProjectileScript.SetVelocity (dir.normalized * projectilespeed * Time.deltaTime);
+
+		projectiles.Add (newProjectile);
 	}
 
 	protected override void Movement(){

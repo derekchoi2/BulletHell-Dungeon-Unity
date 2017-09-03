@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour {
 	public float score = 0f;
 	public Text timeBetweenShotsText;
 
+	private List<GameObject> projectiles;
 	private float nextShot;
 	private float shotTimer = 0f;
 	private Vector3 startPos = new Vector3(0,1,0);
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour {
 		nextShot = timeBetweenShots;
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
+		projectiles = new List<GameObject> ();
 		Reset ();
 	}
 
@@ -51,8 +53,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FireProjectile(){
-		BasicProjectile shot = Instantiate (projectile, transform.position, transform.rotation).GetComponent<BasicProjectile> ();
-		shot.owner = BasicProjectile.Owner.Player;
+		GameObject projectileInstance = Instantiate (projectile, transform.position, transform.rotation);
+		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
+		projectileScript.owner = BasicProjectile.Owner.Player;
 
 		//determine direction
 		float x = 0;
@@ -66,7 +69,9 @@ public class PlayerController : MonoBehaviour {
 		else if (Input.GetKey (KeyCode.RightArrow))
 			x += 1;
 		Vector3 dir = new Vector3 (x, 0, z);
-		shot.SetVelocity (dir.normalized * PlayerController.Instance.BasicProjectileSpeed * Time.deltaTime);
+		projectileScript.SetVelocity (dir.normalized * PlayerController.Instance.BasicProjectileSpeed * Time.deltaTime);
+
+		projectiles.Add (projectileInstance);
 	}
 
 	void FixedUpdate(){
@@ -91,8 +96,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (collider.gameObject.CompareTag ("Pickup")) {
 			Debug.Log ("Player detect pickup");
-			CollectPickup (collider.gameObject, collider.gameObject.GetComponent<Pickup>());
-			GameController.Instance.StartPickupTimer ();
+			CollectPickup (collider.gameObject.GetComponent<Pickup>());
 		}
 
 		if ((collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Enemy) ||
@@ -100,19 +104,23 @@ public class PlayerController : MonoBehaviour {
 			//player collide with enemy projectile OR enemy
 			gc.Reset();
 			Destroy (gameObject);
-			Destroy (collider.gameObject); //destroy projectile
 		}
 	}
 
-	void CollectPickup(GameObject gameObject, Pickup pickup){
+	void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
 		case PickupTypes.firerate:
 			timeBetweenShots += pickup.value;
 			break;
 		}
+		PickupController.Instance.PickupCollected ();
 	}
 
 	public void Reset(){
+		foreach (GameObject projectile in projectiles) {
+			Destroy (projectile);
+		}
+		projectiles.Clear ();
 		ResetPos ();
 		score = 0;
 	}
