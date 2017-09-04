@@ -126,4 +126,3 @@ MonoBehaviour:
   BasicProjectileSpeed: 40
   speed: 20
   score: 0
-  timeBetweenShotsText: {fileID: 0}

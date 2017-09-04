@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour {
 	public float BasicProjectileSpeed = 40f;
 	public float speed = 20f;
 	public float score = 0f;
-	public Text timeBetweenShotsText;
 
 	private List<GameObject> projectiles;
 	private float nextShot;
