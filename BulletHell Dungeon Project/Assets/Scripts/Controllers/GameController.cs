@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum States{
+	Idle, Attack, Move, Hit, Die
+}
+
 public enum EnemyTypes{
 	basic
 }

@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour {
 
 		shotTimer = shotTimer + Time.deltaTime;
 
-		if ((Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) && shotTimer > nextShot)
+		if ((Input.GetAxis("ShootVertical") != 0 || Input.GetAxis("ShootHorizontal") != 0) && shotTimer > nextShot)
 		{
 			nextShot = shotTimer + timeBetweenShots;
 			FireProjectile ();
@@ -56,18 +56,10 @@ public class PlayerController : MonoBehaviour {
 		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
 		projectileScript.owner = BasicProjectile.Owner.Player;
 
-		//determine direction
-		float x = 0;
-		float z = 0;
-		if (Input.GetKey (KeyCode.UpArrow))
-			z += 1;
-		else if (Input.GetKey (KeyCode.DownArrow))
-			z -= 1;
-		if (Input.GetKey (KeyCode.LeftArrow))
-			x -= 1;
-		else if (Input.GetKey (KeyCode.RightArrow))
-			x += 1;
-		Vector3 dir = new Vector3 (x, 0, z);
+		float shootHorizontal = Input.GetAxis ("ShootHorizontal");
+		float shootVertical = Input.GetAxis ("ShootVertical");
+		Vector3 dir = new Vector3 (shootHorizontal, 0, shootVertical);
+
 		projectileScript.SetVelocity (dir.normalized * PlayerController.Instance.BasicProjectileSpeed * Time.deltaTime);
 
 		projectiles.Add (projectileInstance);
