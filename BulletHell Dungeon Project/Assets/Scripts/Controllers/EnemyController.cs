@@ -48,7 +48,12 @@ public class EnemyController : MonoBehaviour {
 
 	EnemyTypes RandomEnemy(){
 		//random enum value
-		return (EnemyTypes)Random.Range (0, System.Enum.GetNames (typeof(EnemyTypes)).Length - 1);
+		int enumsize = System.Enum.GetNames (typeof(EnemyTypes)).Length;
+		if (enumsize == 1)
+			return (EnemyTypes) 0;
+		else
+			return (EnemyTypes)Random.Range (0, System.Enum.GetNames (typeof(EnemyTypes)).Length);
+
 	}
 
 	public void EnemyHit(GameObject enemy){

@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum States{
-	Idle, Attack, Move, Hit, Die
+	Idle, Attack, Hit, Die, Move
+}
+
+public enum Directions{
+	Unspecified, S, SW, W, NW, N, NE, E, SE
 }
 
 public enum EnemyTypes{
-	basic
+	basic, fast
 }
 
 [System.Serializable]

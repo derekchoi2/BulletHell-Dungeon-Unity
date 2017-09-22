@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class SpriteListWrapper{
 	public States state;
+	public Directions direction;
+	public bool flip = false;
 	public float TimeBetweenSprites = 0.5f;
 	public List<Sprite> sprites;
 }
@@ -15,22 +17,45 @@ public class SpriteAnimator : MonoBehaviour {
 
 	private float currentTime;
 	private int currentSprite;
-	private int currentState;
+	private int currentIndex;
 
 	private SpriteRenderer spriteRenderer;
 
-	void Start(){
+	void Awake(){
 		spriteRenderer = GetComponent<SpriteRenderer> ();
+	}
+
+	void Start(){
 		currentTime = 0;
 		currentSprite = 0;
-		currentState = FindStateIndex(States.Idle);
+		currentIndex = FindIndex(States.Idle, Directions.Unspecified);
 
 		UpdateSprite ();
 	}
 
-	int FindStateIndex(States state){
+	int FindIndex(States state, Directions dir){
 		for (int i = 0; i < sprites.Count; i++){
-			if (sprites [i].state == state)
+			if (sprites [i].state == state && sprites[i].direction == dir)
+				return i;
+		}
+
+		//if no match, replace attack animation with move animation
+		if (state == States.Attack) {
+			for (int i = 0; i < sprites.Count; i++) {
+				if (sprites [i].state == States.Move && sprites [i].direction == dir)
+					return i;
+			}
+		}
+
+		//find idle
+		for (int i = 0; i < sprites.Count; i++){
+			if (sprites [i].state == States.Idle)
+				return i;
+		}
+
+		//find first appearance of direction if no idle
+		for (int i = 0; i < sprites.Count; i++) {
+			if (sprites [i].direction == dir)
 				return i;
 		}
 		return 0;
@@ -40,20 +65,34 @@ public class SpriteAnimator : MonoBehaviour {
 	void Update () {
 		currentTime += Time.deltaTime;
 
-		if (currentTime > sprites[currentState].TimeBetweenSprites) {
-			currentSprite = (currentSprite + 1) % sprites [currentState].sprites.Count;
-			UpdateSprite ();
+		if (currentTime > sprites[currentIndex].TimeBetweenSprites) {
+			
 			currentTime = 0;
+			currentSprite++;
+			if (currentSprite >= sprites [currentIndex].sprites.Count) {
+				currentSprite = 0;
+			}
+			UpdateSprite ();
 		}
 	}
 
 	void UpdateSprite(){
-		spriteRenderer.sprite = sprites[currentState].sprites[currentSprite];
+//		Debug.Log ("Index: " + currentIndex + "/" + sprites.Count);
+//		Debug.Log ("Sprite: " + currentSprite + "/" + sprites [currentIndex].sprites.Count);
+//		Debug.Log (" ");
+		spriteRenderer.sprite = sprites[currentIndex].sprites[currentSprite];
 	}
 
-	void ChangeState(States state){
-		currentState = FindStateIndex (state);
+	public void ChangeState(States state, Directions dir){
+		currentIndex = FindIndex (state, dir);
+		if (sprites [currentIndex].flip)
+			spriteRenderer.flipX = true;
+		else
+			spriteRenderer.flipX = false;
 		currentSprite = 0;
 		currentTime = 0;
+		UpdateSprite ();
+
+		//Debug.Log ("STATE CHANGE: " + state.ToString ());
 	}
 }

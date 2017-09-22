@@ -5,17 +5,23 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
 
 	public float movespeed = 5f;
-	public bool canShoot;
 	public GameObject projectile;
 	public float timeBetweenShots = 1f;
-	public float projectilespeed = 20f;
+	public float projectileSpeed = 20f;
+	public bool canshoot;
 
+	protected States state;
+	protected Directions direction;
 	protected GameController gc;
 	protected float shotTimer = 0f;
 	protected float nextShot;
 	protected List<GameObject> projectiles;
+	protected Vector3 moveVelocity = Vector3.zero;
 
 	protected virtual void FireProjectile(){}
+	protected virtual void Move (){}
+	protected virtual void Attack(){}
+	protected virtual void Shoot(){}
 
 	protected void ProjectileTimer(){
 		shotTimer = shotTimer + Time.deltaTime;
@@ -29,14 +35,20 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
-	protected virtual void Movement (){}
-
 	protected void Update(){
-		if (canShoot)
-			ProjectileTimer ();
+		if (canshoot)
+			Shoot ();
+		else
+			Attack ();
 
 		//movement
-		Movement();
+		Move();
+
+		//stay in boundary
+		transform.position = new Vector3 (
+			Mathf.Clamp (transform.position.x, GameController.Instance.boundary.xMin, GameController.Instance.boundary.xMax),
+			0f,
+			Mathf.Clamp (transform.position.z, GameController.Instance.boundary.zMin, GameController.Instance.boundary.zMax));
 	}
 
 	void OnTriggerEnter(Collider collider){
@@ -54,5 +66,6 @@ public class Enemy : MonoBehaviour {
 		}
 		projectiles.Clear ();
 	}
+
 
 }

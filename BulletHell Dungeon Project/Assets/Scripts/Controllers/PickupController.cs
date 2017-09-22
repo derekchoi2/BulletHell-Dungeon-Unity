@@ -67,7 +67,7 @@ public class PickupController : MonoBehaviour {
 
 	PickupTypes RandomPickupType(){
 		//random enum value
-		return (PickupTypes)Random.Range (0, System.Enum.GetNames (typeof(PickupTypes)).Length - 1);
+		return (PickupTypes)Random.Range (0, System.Enum.GetNames (typeof(PickupTypes)).Length);
 	}
 
 	public void Clear(){
