@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Player) {
 			//player projectile collide with Enemy
+			LevelController.Instance.EnemyKilled();
 			EnemyController.Instance.EnemyHit(gameObject);
 			projectiles.Remove (collider.gameObject);
 			Destroy (collider.gameObject); //destroy projectile

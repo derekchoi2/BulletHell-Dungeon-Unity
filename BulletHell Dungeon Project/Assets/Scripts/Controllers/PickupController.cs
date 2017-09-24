@@ -14,6 +14,7 @@ public class PickupController : MonoBehaviour {
 	public GameObject PickupTextPrefab;
 	public float PickupSpawnTime = 8f;
 	public float PickupTextDespawnTime = 1f;
+	public bool spawn = false;
 
 	private bool pickupSpawn;
 	private GameObject currentPickupText;
@@ -32,16 +33,24 @@ public class PickupController : MonoBehaviour {
 	void Start () {
 		gameController = GameController.Instance;
 		pickupSpawn = false;
-
-		StartCoroutine (PickupSpawnTimer ());
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (pickupSpawn) {
-			pickupSpawn = false;
+		if (pickupSpawn && spawn) {
+			spawn = false;
 			NewPickup ();
 		}
+	}
+
+	public void LevelStart(){
+		spawn = true;
+		StartCoroutine (PickupSpawnTimer ());
+	}
+
+	public void LevelEnd(){
+		spawn = false;
+		StopAllCoroutines ();
 	}
 
 	public void Reset(){

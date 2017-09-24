@@ -8,10 +8,12 @@ public class EnemyController : MonoBehaviour {
 
 	public List<GameObject> EnemyPrefabs;
 	public float EnemySpawnTime = 3f;
-	public float EnemySpawnDecay = 0.1f;
+	public float EnemySpawnDecay = 0.02f;
 	public float EnemySpawnTimeMin = 0.5f;
 
-	private bool enemySpawn;
+	private int enemiesPerSpawn = 1;
+	public bool spawn; //affected by number of spawns
+	private bool enemySpawn; //affected by timer
 	private List<GameObject> enemies;
 	private float SavedEnemySpawnTime;
 
@@ -24,18 +26,35 @@ public class EnemyController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SavedEnemySpawnTime = EnemySpawnTime;
-		enemySpawn = false;
 		enemies = new List<GameObject> ();
-		StartCoroutine (EnemySpawnTimer ());
+		SavedEnemySpawnTime = EnemySpawnTime;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (enemySpawn) {
+		if (enemySpawn && spawn) {
 			enemySpawn = false;
-			NewEnemy (RandomEnemy());
+			for (int i = 0; i < enemiesPerSpawn; i++) {
+				NewEnemy (RandomEnemy ());
+			}
+			StartCoroutine (EnemySpawnTimer ());
 		}
+	}
+
+	public void LevelStart(int level){
+		enemiesPerSpawn = level;
+		EnemySpawnTime = SavedEnemySpawnTime;
+		spawn = true;
+		StartCoroutine (EnemySpawnTimer ());
+	}
+
+	public void LevelEnd(){
+		StopSpawning ();
+	}
+
+	public void StopSpawning(){
+		spawn = false;
+		StopAllCoroutines ();
 	}
 
 	public void Clear(){
@@ -64,8 +83,10 @@ public class EnemyController : MonoBehaviour {
 
 	void NewEnemy(EnemyTypes enemy){
 		enemies.Add(Instantiate(EnemyPrefabs[(int)enemy]));
-		EnemySpawnTime = Mathf.Clamp (EnemySpawnTime - EnemySpawnDecay, EnemySpawnTimeMin, EnemySpawnTime);
-		StartCoroutine (EnemySpawnTimer ());
+		EnemySpawnTime = EnemySpawnTime - EnemySpawnDecay;
+		if (EnemySpawnTime < EnemySpawnTimeMin)
+			EnemySpawnTime = EnemySpawnTimeMin;
+		LevelController.Instance.EnemySpawned ();
 	}
 
 	public void Reset(){

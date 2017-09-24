@@ -25,17 +25,20 @@ public class GameController : MonoBehaviour {
 
 	public static GameController Instance = null;
 
-	public GameObject playerPrefab;
 	public Boundary boundary;
 	public Text scoreText;
 	public Text timeBetweenShotsText;
 	public Text timeBetweenEnemySpawnText;
-
+	public Text EnemiesLeftText;
+	public Text LevelText;
+	public int level = 1;
 
 	//controller singletons
 	private PickupController pickupController;
 	private EnemyController enemyController;
+	private LevelController levelController;
 	private PlayerController playerController;
+
 
 	void Awake(){
 		if (Instance == null) Instance = this;
@@ -48,9 +51,9 @@ public class GameController : MonoBehaviour {
 	void Start () {
 		pickupController = PickupController.Instance;
 		enemyController = EnemyController.Instance;
-
-		Instantiate (playerPrefab);
+		levelController = LevelController.Instance;
 		playerController = PlayerController.Instance;
+		levelController.NewLevel (level);
 	}
 
 	void Update(){
@@ -61,28 +64,33 @@ public class GameController : MonoBehaviour {
 		scoreText.text = "Score: " + playerController.score;
 		timeBetweenShotsText.text = "Time Between Shots: " + playerController.timeBetweenShots;
 		timeBetweenEnemySpawnText.text = "Time Between Enemy Spawns: " + enemyController.EnemySpawnTime;
+		EnemiesLeftText.text = "Enemies Left: " + levelController.enemiesToKill;
+		LevelText.text = "Level: " + level;
 	}
 
-	public void ClearRoom(){
-		playerController.ResetPos ();
+	void ClearRoom(){
 		enemyController.Clear ();
 		pickupController.Clear ();
 	}
 
-	public void Reset(){
-		StopAllCoroutines ();
-		StartCoroutine (RestartTimer ());
+	void Reset(){
 		pickupController.Reset ();
 		enemyController.Reset ();
 	}
 
-	public IEnumerator RestartTimer() {
-		yield return new WaitForSeconds (2f);
-		Start ();
+	public void PlayerDie(){
+		Reset ();
+		level = 1;
+		levelController.NewLevel (level);
 	}
 
-	public void PlayerHit(){
-		Reset ();
+	public void LevelEnd(){
+		ClearRoom ();
+	}
+
+
+	public void LevelUp(){
+		levelController.NewLevel (++level);
 	}
 
 	public Vector3 RandomPosition(){

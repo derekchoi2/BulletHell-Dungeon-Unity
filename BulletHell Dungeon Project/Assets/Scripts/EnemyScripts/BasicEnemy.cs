@@ -71,7 +71,7 @@ public class BasicEnemy : Enemy {
 				direction = Directions.W;
 			} else if (z >= 0.5) {
 				direction = Directions.NW;
-			} else if (z <= 0.5) {
+			} else if (z <= -0.5) {
 				direction = Directions.SW;
 			}
 		} else if (x > 0) { //right
@@ -79,7 +79,7 @@ public class BasicEnemy : Enemy {
 				direction = Directions.E;
 			} else if (z >= 0.5) {
 				direction = Directions.NE;
-			} else if (z <= 0.5) {
+			} else if (z <= -0.5) {
 				direction = Directions.SE;
 			}
 		} else if (z > 0) { //up

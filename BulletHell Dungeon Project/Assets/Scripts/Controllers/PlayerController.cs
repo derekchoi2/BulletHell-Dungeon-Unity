@@ -20,10 +20,14 @@ public class PlayerController : MonoBehaviour {
 	public float BasicProjectileSpeed = 40f;
 	public float speed = 20f;
 	public float score = 0f;
+	private bool dead = false;
 
 	private States state;
 	private Directions direction;
 	private SpriteAnimator animator;
+	private SpriteRenderer spriteRenderer;
+
+	private float savedTimeBetweenShots;
 
 	private List<GameObject> projectiles;
 	private float nextShot;
@@ -37,31 +41,35 @@ public class PlayerController : MonoBehaviour {
 		state = States.Idle;
 		direction = Directions.Unspecified;
 		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
+		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
 		nextShot = timeBetweenShots;
+		savedTimeBetweenShots = timeBetweenShots;
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
 		projectiles = new List<GameObject> ();
 		Reset ();
+		Hide ();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		Move ();
+		if (!dead) {
+			Move ();
 
-		shotTimer = shotTimer + Time.deltaTime;
+			shotTimer = shotTimer + Time.deltaTime;
 
-		if (shotTimer > nextShot)
-		{	
-			if (state == States.Attack) {
-				state = States.Idle;
-				animator.ChangeState (state, direction);
-			}
+			if (shotTimer > nextShot) {	
+				if (state == States.Attack) {
+					state = States.Idle;
+					animator.ChangeState (state, direction);
+				}
 
-			if (Input.GetAxis ("ShootVertical") != 0 || Input.GetAxis ("ShootHorizontal") != 0) {
-				nextShot = shotTimer + timeBetweenShots;
-				FireProjectile ();
-				nextShot = nextShot - shotTimer;
-				shotTimer = 0.0F;
+				if (Input.GetAxis ("ShootVertical") != 0 || Input.GetAxis ("ShootHorizontal") != 0) {
+					nextShot = shotTimer + timeBetweenShots;
+					FireProjectile ();
+					nextShot = nextShot - shotTimer;
+					shotTimer = 0.0F;
+				}
 			}
 		}
 	}
@@ -97,10 +105,15 @@ public class PlayerController : MonoBehaviour {
 			0f,
 			Mathf.Clamp (rb.position.z, GameController.Instance.boundary.zMin, GameController.Instance.boundary.zMax));
 
+		Directions newDir = CalculateDirection (dir);
+
 		if (moveHorizontal != 0 || moveVertical != 0) {
 			if (state == States.Idle) {
 				state = States.Move;
-				direction = CalculateDirection (dir);
+				direction = newDir;
+				animator.ChangeState (state, direction);
+			} else if (direction != newDir) {
+				direction = newDir;
 				animator.ChangeState (state, direction);
 			}
 		} else {
@@ -115,23 +128,58 @@ public class PlayerController : MonoBehaviour {
 
 	//if hit door, reset position
 	void OnTriggerEnter(Collider collider){
-		if (collider.gameObject.CompareTag("Door")){
-			//collide with player
-			gc.ClearRoom();
-		}
+		if (!dead) {
+			if (collider.gameObject.CompareTag ("Door")) {
+				//collide with player
+				PlayerDoorCollide (transform.position);
+				LevelController.Instance.PlayerDoorCollide ();
+			}
 
-		if (collider.gameObject.CompareTag ("Pickup")) {
-			Debug.Log ("Player detect pickup");
-			CollectPickup (collider.gameObject.GetComponent<Pickup>());
-		}
+			if (collider.gameObject.CompareTag ("Pickup")) {
+				Debug.Log ("Player detect pickup");
+				CollectPickup (collider.gameObject.GetComponent<Pickup> ());
+			}
 
-		if ((collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Enemy) ||
-			collider.gameObject.CompareTag("Enemy")) {
-			//player collide with enemy projectile OR enemy
-			gc.Reset();
-			DestroyProjectiles ();
-			Destroy (gameObject);
+			if ((collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile> ().owner == BasicProjectile.Owner.Enemy) ||
+			   collider.gameObject.CompareTag ("Enemy")) {
+				//player collide with enemy projectile OR enemy
+				DestroyProjectiles ();
+				Hide ();
+				gc.PlayerDie ();
+			}
 		}
+	}
+
+	public void Hide(){
+		spriteRenderer.enabled = false;
+		dead = true;
+	}
+
+	public void Show(){
+		spriteRenderer.enabled = true;
+		if (dead) {
+			ResetPos ();
+			score = 0;
+		}
+		dead = false;
+	}
+
+	public void PlayerDoorCollide(Vector3 position){
+		//appear as if went through door
+		Vector3 nextPos;
+		float x = position.x;
+		float y = position.y;
+		float z = position.z;
+		if (z > gc.boundary.zMax - 5)
+			nextPos = new Vector3 (x, y, z * -1);
+		else if (z < gc.boundary.zMin + 5)
+			nextPos = new Vector3 (x, y, z * -1);
+		else if (x > gc.boundary.xMax - 5)
+			nextPos = new Vector3 (x * -1, y, z);
+		else
+			nextPos = new Vector3 (x * -1, y, z);
+		rb.position = nextPos;
+
 	}
 
 	void CollectPickup(Pickup pickup){
@@ -157,6 +205,7 @@ public class PlayerController : MonoBehaviour {
 		direction = Directions.Unspecified;
 		animator.ChangeState (state, direction);
 		score = 0;
+		timeBetweenShots = savedTimeBetweenShots;
 	}
 
 	public void ResetPos(){
@@ -172,7 +221,7 @@ public class PlayerController : MonoBehaviour {
 				return Directions.W;
 			} else if (z >= 0.5) {
 				return Directions.NW;
-			} else if (z <= 0.5) {
+			} else if (z <= -0.5) {
 				return Directions.SW;
 			}
 		} else if (x > 0) { //right
@@ -180,7 +229,7 @@ public class PlayerController : MonoBehaviour {
 				return Directions.E;
 			} else if (z >= 0.5) {
 				return Directions.NE;
-			} else if (z <= 0.5) {
+			} else if (z <= -0.5) {
 				return Directions.SE;
 			}
 		} else if (z > 0) { //up

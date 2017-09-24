@@ -49,11 +49,6 @@ public class DashEnemy : Enemy {
 
 	}
 
-	protected override void Attack(){
-		//dash
-		Vector3 dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-	}
-
 	protected void CalculateDirection(Vector3 dir){
 		float x = dir.x;
 		if (x < 0) { //left
