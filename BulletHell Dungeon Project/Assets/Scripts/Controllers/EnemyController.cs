@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour {
 
 	public List<GameObject> EnemyPrefabs;
 	public float EnemySpawnTime = 3f;
-	public float EnemySpawnDecay = 0.02f;
+	public float EnemySpawnDecay = 0.1f;
 	public float EnemySpawnTimeMin = 0.5f;
 
 	private int enemiesPerSpawn = 1;
@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour {
 	public void EnemyHit(GameObject enemy){
 		enemies.Remove (enemy);
 		Destroy (enemy);
-		PlayerController.Instance.score++;
+		PlayerController.Instance.EnemyHit();
 	}
 
 	void NewEnemy(EnemyTypes enemy){

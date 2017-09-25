@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour {
 	public Text EnemiesLeftText;
 	public Text LevelText;
 	public int level = 1;
+	public int sublevel = 1;
 
 	//controller singletons
 	private PickupController pickupController;
@@ -53,7 +54,7 @@ public class GameController : MonoBehaviour {
 		enemyController = EnemyController.Instance;
 		levelController = LevelController.Instance;
 		playerController = PlayerController.Instance;
-		levelController.NewLevel (level);
+		levelController.NewLevel (level, sublevel);
 	}
 
 	void Update(){
@@ -65,7 +66,7 @@ public class GameController : MonoBehaviour {
 		timeBetweenShotsText.text = "Time Between Shots: " + playerController.timeBetweenShots;
 		timeBetweenEnemySpawnText.text = "Time Between Enemy Spawns: " + enemyController.EnemySpawnTime;
 		EnemiesLeftText.text = "Enemies Left: " + levelController.enemiesToKill;
-		LevelText.text = "Level: " + level;
+		LevelText.text = "Level: " + level + "-" + sublevel;
 	}
 
 	void ClearRoom(){
@@ -81,7 +82,8 @@ public class GameController : MonoBehaviour {
 	public void PlayerDie(){
 		Reset ();
 		level = 1;
-		levelController.NewLevel (level);
+		sublevel = 1;
+		levelController.NewLevel (level, sublevel);
 	}
 
 	public void LevelEnd(){
@@ -90,7 +92,12 @@ public class GameController : MonoBehaviour {
 
 
 	public void LevelUp(){
-		levelController.NewLevel (++level);
+		sublevel++;
+		if (sublevel > 3) {
+			sublevel = 1;
+			level++;
+		}
+		levelController.NewLevel (level, sublevel);
 	}
 
 	public Vector3 RandomPosition(){

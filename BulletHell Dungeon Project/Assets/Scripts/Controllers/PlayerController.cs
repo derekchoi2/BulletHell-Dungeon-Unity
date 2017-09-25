@@ -106,6 +106,11 @@ public class PlayerController : MonoBehaviour {
 			Mathf.Clamp (rb.position.z, GameController.Instance.boundary.zMin, GameController.Instance.boundary.zMax));
 
 		Directions newDir = CalculateDirection (dir);
+		//smooth out directional movement animations
+		if (newDir == Directions.NE || newDir == Directions.SE)
+			newDir = Directions.E;
+		if (newDir == Directions.NW || newDir == Directions.SW)
+			newDir = Directions.W;
 
 		if (moveHorizontal != 0 || moveVertical != 0) {
 			if (state == States.Idle) {
@@ -158,10 +163,13 @@ public class PlayerController : MonoBehaviour {
 	public void Show(){
 		spriteRenderer.enabled = true;
 		if (dead) {
-			ResetPos ();
-			score = 0;
+			Reset ();
 		}
 		dead = false;
+	}
+
+	public void EnemyHit(){
+		score += ((gc.level - 1) * 3) + gc.sublevel;
 	}
 
 	public void PlayerDoorCollide(Vector3 position){

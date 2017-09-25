@@ -7,7 +7,7 @@ public class DoorController : MonoBehaviour {
 	private BoxCollider boxCollider;
 	private MeshRenderer meshRenderer;
 
-	void Start(){
+	void Awake(){
 		boxCollider = gameObject.GetComponent<BoxCollider> ();
 		meshRenderer = gameObject.GetComponent<MeshRenderer> ();
 	}

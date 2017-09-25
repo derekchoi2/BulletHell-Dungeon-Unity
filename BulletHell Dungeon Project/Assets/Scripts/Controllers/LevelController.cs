@@ -11,16 +11,18 @@ public class LevelController : MonoBehaviour {
 		else if (Instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+		savedLevelMultiplier = levelMultiplier;
 	}
 
 	public float levelTimer = 1f;
 	public int totalEnemies;
 	public int enemiesToKill;
 	public int enemiesSpawned;
-	public int levelMultiplier = 10;
+	public int levelMultiplier = 5;
 	public List<DoorController> Doors;
 
 	private int level = 1;
+	private int savedLevelMultiplier;
 	private GameController gameController;
 	private PickupController pickupController;
 	private EnemyController enemyController;
@@ -44,9 +46,10 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
-	public void NewLevel(int val){
-		level = val;
-		totalEnemies = level * levelMultiplier;
+	public void NewLevel(int lvl, int sublevel){
+		level = lvl;
+		levelMultiplier = savedLevelMultiplier * level;
+		totalEnemies = sublevel * levelMultiplier;
 		enemiesToKill = totalEnemies;
 		enemiesSpawned = 0;
 		StartCoroutine (LevelStartTimer ());
