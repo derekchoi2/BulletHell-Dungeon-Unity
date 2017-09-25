@@ -13,6 +13,12 @@ public class PlayerController : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 	}
 
+	public GameObject leftJoystickObject;
+	public GameObject rightJoystickObject;
+
+	private VirtualJoystick leftJoystick;
+	private VirtualJoystick rightJoystick;
+
 	private GameController gc;
 
 	public GameObject projectile;
@@ -49,6 +55,20 @@ public class PlayerController : MonoBehaviour {
 		projectiles = new List<GameObject> ();
 		Reset ();
 		Hide ();
+
+
+		leftJoystick = leftJoystickObject.GetComponent<VirtualJoystick> ();
+		rightJoystick = rightJoystickObject.GetComponent<VirtualJoystick> ();
+
+		#if UNITY_IOS || UNITY_ANDROID
+		#elif UNITY_STANDALONE || UNITY_EDITOR
+		leftJoystickObject.GetComponent<Image>().enabled = false;
+		leftJoystickObject.transform.GetChild (0).GetComponent<Image> ().enabled = false;
+		rightJoystickObject.GetComponent<Image>().enabled = false;
+		rightJoystickObject.transform.GetChild (0).GetComponent<Image> ().enabled = false;
+		leftJoystick.enabled = false;
+		rightJoystick.enabled = false;
+		#endif
 	}
 
 	// Update is called once per frame
@@ -64,9 +84,17 @@ public class PlayerController : MonoBehaviour {
 					animator.ChangeState (state, direction);
 				}
 
-				if (Input.GetAxis ("ShootVertical") != 0 || Input.GetAxis ("ShootHorizontal") != 0) {
+				#if UNITY_STANDALONE || UNITY_EDITOR
+				float shootVertical = Input.GetAxis ("ShootVertical");
+				float shootHorizontal = Input.GetAxis ("ShootHorizontal");
+				#elif UNITY_IOS || UNITY_ANDROID
+				float shootHorizontal = rightJoystick.GetDiscrete().x;
+				float shootVertical = rightJoystick.GetDiscrete().z;
+				#endif
+
+				if (shootVertical != 0 || shootHorizontal != 0) {
 					nextShot = shotTimer + timeBetweenShots;
-					FireProjectile ();
+					FireProjectile (shootHorizontal, shootVertical);
 					nextShot = nextShot - shotTimer;
 					shotTimer = 0.0F;
 				}
@@ -74,13 +102,11 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void FireProjectile(){
+	void FireProjectile(float shootHorizontal, float shootVertical){
 		GameObject projectileInstance = Instantiate (projectile, transform.position, transform.rotation);
 		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
 		projectileScript.owner = BasicProjectile.Owner.Player;
 
-		float shootHorizontal = Input.GetAxis ("ShootHorizontal");
-		float shootVertical = Input.GetAxis ("ShootVertical");
 		Vector3 dir = new Vector3 (shootHorizontal, 0, shootVertical).normalized;
 
 		Directions attackdir = CalculateDirection (dir);
@@ -93,8 +119,13 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Move(){
+		#if UNITY_STANDALONE || UNITY_EDITOR
 		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 		float moveVertical = Input.GetAxisRaw ("Vertical");
+		#elif UNITY_IOS || UNITY_ANDROID
+		float moveHorizontal = leftJoystick.GetDiscrete().x;
+		float moveVertical = leftJoystick.GetDiscrete().z;
+		#endif
 
 		Vector3 dir = new Vector3 (moveHorizontal, 0, moveVertical).normalized;
 
