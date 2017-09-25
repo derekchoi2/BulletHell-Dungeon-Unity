@@ -138,8 +138,8 @@ PlayerSettings:
       depthFormat: 1
   protectGraphicsMemory: 0
   useHDRDisplay: 0
-  targetPixelDensity: 0
-  resolutionScalingMode: 0
+  targetPixelDensity: 200
+  resolutionScalingMode: 1
   applicationIdentifier:
     Android: me.derekchoi.BulletHellDungeon
   buildNumber: {}
