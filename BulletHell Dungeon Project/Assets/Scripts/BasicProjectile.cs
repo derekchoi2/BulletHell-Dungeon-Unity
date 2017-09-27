@@ -6,6 +6,7 @@ public class BasicProjectile : MonoBehaviour {
 
 	private Vector3 projVelocity;
 	public Owner owner;
+	public int Damage = 1;
 
 	public enum Owner
 	{

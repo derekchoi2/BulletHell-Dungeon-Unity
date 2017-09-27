@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour {
 	public float timeBetweenShots = 1f;
 	public float projectileSpeed = 20f;
 	public bool canshoot;
+	public HealthBar healthBar;
 
 	protected States state;
 	protected Directions direction;
@@ -54,9 +55,13 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Player) {
 			//player projectile collide with Enemy
-			LevelController.Instance.EnemyKilled();
-			EnemyController.Instance.EnemyHit(gameObject);
-			projectiles.Remove (collider.gameObject);
+			healthBar.ChangeHealth(collider.gameObject.GetComponent<BasicProjectile>().Damage);
+			healthBar.UpdateHealthBar ();
+			if (healthBar.isDead()){
+				LevelController.Instance.EnemyKilled();
+				EnemyController.Instance.EnemyHit(gameObject);
+				//projectiles.Remove (collider.gameObject);
+			}
 			Destroy (collider.gameObject); //destroy projectile
 		}
 	}
