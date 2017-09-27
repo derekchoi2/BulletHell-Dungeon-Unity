@@ -11,13 +11,15 @@ public class PlayerController : MonoBehaviour {
 		else if (Instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
+
+
 	}
 
-	public GameObject leftJoystickObject;
-	public GameObject rightJoystickObject;
+	public InnerJoystick leftJoystick;
+	public InnerJoystick rightJoystick;
 
-	private VirtualJoystick leftJoystick;
-	private VirtualJoystick rightJoystick;
+	public Vector3 leftStickVec { get; set; }
+	public Vector3 rightStickVec { get; set; }
 
 	private GameController gc;
 
@@ -42,6 +44,12 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody rb;
 
+	#if UNITY_IOS || UNITY_ANDROID
+	private bool enableJoysticks = true;
+	#else
+	private bool enableJoysticks = false;
+	#endif
+
 	// Use this for initialization
 	void Start () {
 		state = States.Idle;
@@ -55,49 +63,39 @@ public class PlayerController : MonoBehaviour {
 		projectiles = new List<GameObject> ();
 		Reset ();
 		Hide ();
-
-
-		leftJoystick = leftJoystickObject.GetComponent<VirtualJoystick> ();
-		rightJoystick = rightJoystickObject.GetComponent<VirtualJoystick> ();
-
-		#if UNITY_IOS || UNITY_ANDROID
-		#elif UNITY_STANDALONE || UNITY_EDITOR
-		leftJoystickObject.GetComponent<Image>().enabled = false;
-		leftJoystickObject.transform.GetChild (0).GetComponent<Image> ().enabled = false;
-		rightJoystickObject.GetComponent<Image>().enabled = false;
-		rightJoystickObject.transform.GetChild (0).GetComponent<Image> ().enabled = false;
-		leftJoystick.enabled = false;
-		rightJoystick.enabled = false;
-		#endif
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (!dead) {
 			Move ();
+			Shoot ();
+		}
+	}
 
-			shotTimer = shotTimer + Time.deltaTime;
+	void Shoot(){
+		shotTimer = shotTimer + Time.deltaTime;
 
-			if (shotTimer > nextShot) {	
-				if (state == States.Attack) {
-					state = States.Idle;
-					animator.ChangeState (state, direction);
-				}
+		if (shotTimer > nextShot) {	
+			if (state == States.Attack) {
+				state = States.Idle;
+				animator.ChangeState (state, direction);
+			}
 
-				#if UNITY_STANDALONE || UNITY_EDITOR
-				float shootVertical = Input.GetAxis ("ShootVertical");
-				float shootHorizontal = Input.GetAxis ("ShootHorizontal");
-				#elif UNITY_IOS || UNITY_ANDROID
-				float shootHorizontal = rightJoystick.GetDiscrete().x;
-				float shootVertical = rightJoystick.GetDiscrete().z;
-				#endif
+			float shootVertical, shootHorizontal;
+			if (!enableJoysticks) {
+				shootVertical = Input.GetAxis ("ShootVertical");
+				shootHorizontal = Input.GetAxis ("ShootHorizontal");
+			} else {
+				shootHorizontal = rightStickVec.x;
+				shootVertical = rightStickVec.y;
+			}
 
-				if (shootVertical != 0 || shootHorizontal != 0) {
-					nextShot = shotTimer + timeBetweenShots;
-					FireProjectile (shootHorizontal, shootVertical);
-					nextShot = nextShot - shotTimer;
-					shotTimer = 0.0F;
-				}
+			if (shootVertical != 0 || shootHorizontal != 0) {
+				nextShot = shotTimer + timeBetweenShots;
+				FireProjectile (shootHorizontal, shootVertical);
+				nextShot = nextShot - shotTimer;
+				shotTimer = 0.0F;
 			}
 		}
 	}
@@ -113,19 +111,20 @@ public class PlayerController : MonoBehaviour {
 
 		state = States.Attack;
 		animator.ChangeState (state, attackdir);
-		projectileScript.SetVelocity (dir * PlayerController.Instance.BasicProjectileSpeed * Time.fixedDeltaTime);
+		projectileScript.SetVelocity (dir * BasicProjectileSpeed * Time.fixedDeltaTime);
 
 		projectiles.Add (projectileInstance);
 	}
 
 	void Move(){
-		#if UNITY_STANDALONE || UNITY_EDITOR
-		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
-		float moveVertical = Input.GetAxisRaw ("Vertical");
-		#elif UNITY_IOS || UNITY_ANDROID
-		float moveHorizontal = leftJoystick.GetDiscrete().x;
-		float moveVertical = leftJoystick.GetDiscrete().z;
-		#endif
+		float moveHorizontal, moveVertical;
+		if (!enableJoysticks) {
+			moveHorizontal = Input.GetAxisRaw ("Horizontal");
+			moveVertical = Input.GetAxisRaw ("Vertical");
+		} else {
+			moveHorizontal = leftStickVec.x;
+			moveVertical = leftStickVec.y;
+		}
 
 		Vector3 dir = new Vector3 (moveHorizontal, 0, moveVertical).normalized;
 
@@ -256,19 +255,19 @@ public class PlayerController : MonoBehaviour {
 		float z = vec.z;
 
 		if (x < 0) { //left
-			if (z < 0.5 && z > -0.5) {
+			if (z < 0.3 && z > -0.3) {
 				return Directions.W;
-			} else if (z >= 0.5) {
+			} else if (z >= 0.3) {
 				return Directions.NW;
-			} else if (z <= -0.5) {
+			} else if (z <= -0.3) {
 				return Directions.SW;
 			}
 		} else if (x > 0) { //right
-			if (z < 0.5 && z > -0.5) {
+			if (z < 0.3 && z > -0.3) {
 				return Directions.E;
-			} else if (z >= 0.5) {
+			} else if (z >= 0.3) {
 				return Directions.NE;
-			} else if (z <= -0.5) {
+			} else if (z <= -0.3) {
 				return Directions.SE;
 			}
 		} else if (z > 0) { //up

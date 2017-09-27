@@ -394,8 +394,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec7a0b1bbc5cdd54d8cd3f45f9855dce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftJoystickObject: {fileID: 0}
-  rightJoystickObject: {fileID: 0}
+  leftJoystick: {fileID: 114361762631267038, guid: 7ea108d52faf40641805e999db29a587,
+    type: 2}
+  rightJoystick: {fileID: 114781345978376386, guid: 800e42079789a9c4092549ba39800781,
+    type: 2}
   projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
   timeBetweenShots: 0.5
   BasicProjectileSpeed: 40
