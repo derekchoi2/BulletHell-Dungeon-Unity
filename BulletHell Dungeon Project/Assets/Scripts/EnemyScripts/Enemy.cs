@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Player) {
 			//player projectile collide with Enemy
-			healthBar.ChangeHealth(collider.gameObject.GetComponent<BasicProjectile>().Damage);
+			healthBar.ChangeHealth(-collider.gameObject.GetComponent<BasicProjectile>().Damage);
 			healthBar.UpdateHealthBar ();
 			if (healthBar.isDead()){
 				LevelController.Instance.EnemyKilled();

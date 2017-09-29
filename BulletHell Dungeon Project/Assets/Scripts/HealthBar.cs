@@ -19,7 +19,7 @@ public class HealthBar : MonoBehaviour {
 	}
 
 	public void UpdateHealthBar(){
-		float percentage = CurrentHealth / MaxHealth;
+		float percentage = (float)CurrentHealth / (float)MaxHealth;
 		Vector3 currentScale = currentValTransform.localScale;
 		currentValTransform.localScale = new Vector3(percentage, currentScale.y, currentScale.z);
 
