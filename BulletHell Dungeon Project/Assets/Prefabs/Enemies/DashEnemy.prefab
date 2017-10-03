@@ -103,8 +103,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1468089958282938}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0.7}
-  m_LocalScale: {x: 1, y: 0.5, z: 0.20000002}
+  m_LocalPosition: {x: 0, y: 5, z: 0.7}
+  m_LocalScale: {x: 1, y: 0.5, z: 0.15}
   m_Children: []
   m_Father: {fileID: 4756581938826540}
   m_RootOrder: 2
@@ -142,8 +142,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1961362545799400}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 1, z: 0.7}
-  m_LocalScale: {x: 1, y: 1, z: 0.2}
+  m_LocalPosition: {x: -0.5, y: 6, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 0.15}
   m_Children:
   - {fileID: 4640311106357824}
   m_Father: {fileID: 4756581938826540}
@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 1915610087648388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 15, y: 1, z: 0}
-  m_LocalScale: {x: 4, y: 1, z: 3}
+  m_LocalScale: {x: 8, y: 1, z: 6}
   m_Children:
   - {fileID: 4622247189545408}
   - {fileID: 4724885898808614}
@@ -274,21 +274,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - state: 4
+  - state: 1
     direction: 7
     flip: 0
     TimeBetweenSprites: 0.05
     sprites:
     - {fileID: 21300016, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
     - {fileID: 21300018, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
-  - state: 4
+  - state: 1
     direction: 3
     flip: 1
     TimeBetweenSprites: 0.05
     sprites:
     - {fileID: 21300016, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
     - {fileID: 21300018, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
-  - state: 1
+  - state: 4
     direction: 7
     flip: 0
     TimeBetweenSprites: 0.05
@@ -301,7 +301,7 @@ MonoBehaviour:
     - {fileID: 21300010, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
     - {fileID: 21300012, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
     - {fileID: 21300014, guid: 59050951d79694b1ea2e5acb0c89a632, type: 3}
-  - state: 1
+  - state: 4
     direction: 3
     flip: 1
     TimeBetweenSprites: 0.05
@@ -325,13 +325,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60277051b15fa4950ba4d7dcf7037d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movespeed: 8
+  movespeed: 5
   projectile: {fileID: 0}
   timeBetweenShots: 1
   projectileSpeed: 20
   canshoot: 0
   healthBar: {fileID: 114620518517844508}
-  moveTime: 2
+  moveTime: 0.5
   attackTime: 1
 --- !u!114 &114620518517844508
 MonoBehaviour:
@@ -345,8 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentValTransform: {fileID: 4724885898808614}
-  MaxHealth: 3
-  CurrentHealth: 0
+  MaxHealth: 1
 --- !u!212 &212005747624337940
 SpriteRenderer:
   m_ObjectHideFlags: 1

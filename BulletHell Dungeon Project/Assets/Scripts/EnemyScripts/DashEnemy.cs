@@ -16,6 +16,11 @@ public class DashEnemy : Enemy {
 		state = States.Move;
 		CalculateDirection (GameController.Instance.RandomPosition().normalized);
 		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
+
+		CalculateDirection ((PlayerController.Instance.transform.position - transform.position).normalized);
+		Debug.Log ("State: " + state.ToString() + " Dir: " + direction.ToString ());
+		animator.ChangeState(state, direction);
+
 		projectiles = new List<GameObject> ();
 		nextShot = timeBetweenShots;
 		gc = GameController.Instance;
@@ -28,15 +33,15 @@ public class DashEnemy : Enemy {
 		if (PlayerController.Instance != null) {
 			Vector3 dir;
 			if (changeVelocity) {
-				if (state == States.Attack) {
+				dir = (PlayerController.Instance.transform.position - transform.position).normalized;
+
+				if (state == States.Attack)
 					//dash towards player
-					dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-					moveVelocity = dir * movespeed * Time.deltaTime * 5;
-				} else {
-					//normal walk in random direction
-					dir = GameController.Instance.RandomPosition ().normalized;
+					moveVelocity = dir * movespeed * Time.deltaTime * 7;
+				else
+					//maintain velocity, slower
 					moveVelocity = dir * movespeed * Time.deltaTime * 0.8f;
-				}
+				
 				CalculateDirection (dir);
 
 				animator.ChangeState (state, direction);
@@ -62,10 +67,10 @@ public class DashEnemy : Enemy {
 	protected IEnumerator MoveTimer(){
 		if (state == States.Move) {
 			state = States.Attack;
-			yield return new WaitForSeconds (moveTime);
+			yield return new WaitForSeconds (attackTime);
 		} else {
 			state = States.Move;
-			yield return new WaitForSeconds (attackTime);
+			yield return new WaitForSeconds (moveTime);
 		}
 		changeVelocity = true;
 	}

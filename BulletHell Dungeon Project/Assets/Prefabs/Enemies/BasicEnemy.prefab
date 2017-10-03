@@ -103,8 +103,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1982070412421844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 1, z: 0.7}
-  m_LocalScale: {x: 1, y: 1, z: 0.2}
+  m_LocalPosition: {x: -0.5, y: 6, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 0.15}
   m_Children:
   - {fileID: 4332726208189100}
   m_Father: {fileID: 4363551661892960}
@@ -130,8 +130,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1445742917308226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15, y: 1, z: 0}
-  m_LocalScale: {x: 1.8, y: 1, z: 2.5}
+  m_LocalPosition: {x: 15, y: 1, z: -11.82}
+  m_LocalScale: {x: 3.6, y: 1, z: 5}
   m_Children:
   - {fileID: 4593858142134594}
   - {fileID: 4111593905096356}
@@ -159,8 +159,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1915667759978842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0.7}
-  m_LocalScale: {x: 1, y: 0.5, z: 0.2}
+  m_LocalPosition: {x: 0, y: 5, z: 0.7}
+  m_LocalScale: {x: 1, y: 0.5, z: 0.15}
   m_Children: []
   m_Father: {fileID: 4363551661892960}
   m_RootOrder: 2
@@ -275,7 +275,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentValTransform: {fileID: 4111593905096356}
   MaxHealth: 2
-  CurrentHealth: 0
 --- !u!114 &114464449639499508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -411,7 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 5
   projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
-  timeBetweenShots: 1
+  timeBetweenShots: 1.5
   projectileSpeed: 20
   canshoot: 1
   healthBar: {fileID: 114368267892302908}
