@@ -23,12 +23,9 @@ public class SpriteAnimator : MonoBehaviour {
 
 	void Awake(){
 		spriteRenderer = GetComponent<SpriteRenderer> ();
-	}
-
-	void Start(){
 		currentTime = 0;
 		currentSprite = 0;
-		currentIndex = FindIndex(States.Idle, Directions.Unspecified);
+		currentIndex = 0;
 
 		UpdateSprite ();
 	}
@@ -58,10 +55,11 @@ public class SpriteAnimator : MonoBehaviour {
 			if (sprites [i].direction == dir)
 				return i;
 		}
+		Debug.Log ("State: " + state.ToString() + " Dir: " + dir.ToString ());
+		Debug.Log ("No Index Found");
 		return 0;
 	}
 
-	// Update is called once per frame
 	void Update () {
 		currentTime += Time.deltaTime;
 

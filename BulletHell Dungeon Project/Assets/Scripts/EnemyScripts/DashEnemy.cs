@@ -8,14 +8,16 @@ public class DashEnemy : Enemy {
 	public float moveTime;
 	public float attackTime;
 
-	private bool changeVelocity = false;
 	private SpriteAnimator animator;
 
 	// Use this for initialization
 	void Start () {
-		state = States.Move;
+		state = States.Attack; //so will change to move when first spawn
 		CalculateDirection (GameController.Instance.RandomPosition().normalized);
 		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
+
+		animator.ChangeState(state, direction);
+
 		projectiles = new List<GameObject> ();
 		nextShot = timeBetweenShots;
 		gc = GameController.Instance;
@@ -28,24 +30,27 @@ public class DashEnemy : Enemy {
 		if (PlayerController.Instance != null) {
 			Vector3 dir;
 			if (changeVelocity) {
-				if (state == States.Attack) {
+				changeVelocity = false;
+				Debug.Log ("change velocity");
+				dir = (PlayerController.Instance.transform.position - transform.position).normalized;
+
+				if (state == States.Attack)
 					//dash towards player
-					dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-					moveVelocity = dir * movespeed * Time.deltaTime * 5;
-				} else {
-					//normal walk in random direction
-					dir = GameController.Instance.RandomPosition ().normalized;
-					moveVelocity = dir * movespeed * Time.deltaTime * 0.8f;
-				}
+					moveVelocity = dir * movespeed * Time.deltaTime * 10;
+				else
+					//maintain velocity, slower
+					moveVelocity = dir * movespeed * Time.deltaTime;
+				
 				CalculateDirection (dir);
 
 				animator.ChangeState (state, direction);
 
 				changeVelocity = false;
+				StopAllCoroutines ();
 				StartCoroutine (MoveTimer ());
 			}
+			transform.position += moveVelocity;
 		}
-		transform.position += moveVelocity;
 
 	}
 
@@ -62,10 +67,10 @@ public class DashEnemy : Enemy {
 	protected IEnumerator MoveTimer(){
 		if (state == States.Move) {
 			state = States.Attack;
-			yield return new WaitForSeconds (moveTime);
+			yield return new WaitForSeconds (attackTime);
 		} else {
 			state = States.Move;
-			yield return new WaitForSeconds (attackTime);
+			yield return new WaitForSeconds (moveTime);
 		}
 		changeVelocity = true;
 	}
