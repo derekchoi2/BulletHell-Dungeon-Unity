@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour {
 	protected float nextShot;
 	protected List<GameObject> projectiles;
 	protected Vector3 moveVelocity = Vector3.zero;
+	protected bool changeVelocity = true; //enemies start moving when they spawn
 
 	protected virtual void FireProjectile(){}
 	protected virtual void Move (){}

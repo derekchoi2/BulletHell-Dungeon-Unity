@@ -25,7 +25,7 @@ public class SpriteAnimator : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		currentTime = 0;
 		currentSprite = 0;
-		currentIndex = FindIndex(States.Idle, Directions.Unspecified);
+		currentIndex = 0;
 
 		UpdateSprite ();
 	}
@@ -55,6 +55,7 @@ public class SpriteAnimator : MonoBehaviour {
 			if (sprites [i].direction == dir)
 				return i;
 		}
+		Debug.Log ("State: " + state.ToString() + " Dir: " + dir.ToString ());
 		Debug.Log ("No Index Found");
 		return 0;
 	}

@@ -7,7 +7,6 @@ public class BasicEnemy : Enemy {
 	public float directionChangeTime = 2f;
 	public float stationaryTime = 1f;
 
-	protected bool changeVelocity = false;
 	private SpriteAnimator animator;
 
 	// Use this for initialization
@@ -52,6 +51,7 @@ public class BasicEnemy : Enemy {
 				animator.ChangeState (state, direction);
 
 				changeVelocity = false;
+				StopAllCoroutines ();
 				StartCoroutine (UpdateVelocityTimer ());
 			}
 			transform.position += moveVelocity;

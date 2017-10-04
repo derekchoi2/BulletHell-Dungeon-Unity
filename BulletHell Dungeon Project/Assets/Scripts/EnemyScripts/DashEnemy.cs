@@ -8,17 +8,14 @@ public class DashEnemy : Enemy {
 	public float moveTime;
 	public float attackTime;
 
-	private bool changeVelocity = false;
 	private SpriteAnimator animator;
 
 	// Use this for initialization
 	void Start () {
-		state = States.Move;
+		state = States.Attack; //so will change to move when first spawn
 		CalculateDirection (GameController.Instance.RandomPosition().normalized);
 		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
 
-		CalculateDirection ((PlayerController.Instance.transform.position - transform.position).normalized);
-		Debug.Log ("State: " + state.ToString() + " Dir: " + direction.ToString ());
 		animator.ChangeState(state, direction);
 
 		projectiles = new List<GameObject> ();
@@ -33,24 +30,27 @@ public class DashEnemy : Enemy {
 		if (PlayerController.Instance != null) {
 			Vector3 dir;
 			if (changeVelocity) {
+				changeVelocity = false;
+				Debug.Log ("change velocity");
 				dir = (PlayerController.Instance.transform.position - transform.position).normalized;
 
 				if (state == States.Attack)
 					//dash towards player
-					moveVelocity = dir * movespeed * Time.deltaTime * 7;
+					moveVelocity = dir * movespeed * Time.deltaTime * 10;
 				else
 					//maintain velocity, slower
-					moveVelocity = dir * movespeed * Time.deltaTime * 0.8f;
+					moveVelocity = dir * movespeed * Time.deltaTime;
 				
 				CalculateDirection (dir);
 
 				animator.ChangeState (state, direction);
 
 				changeVelocity = false;
+				StopAllCoroutines ();
 				StartCoroutine (MoveTimer ());
 			}
+			transform.position += moveVelocity;
 		}
-		transform.position += moveVelocity;
 
 	}
 
