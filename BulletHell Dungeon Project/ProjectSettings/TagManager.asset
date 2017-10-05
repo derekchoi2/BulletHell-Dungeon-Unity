@@ -11,10 +11,6 @@ TagManager:
   - Projectile
   - Pickup
   - PickupText
-  - PlayButton
-  - QuitButton
-  - MainMenuButton
-  - HelpButton
   layers:
   - Default
   - TransparentFX
