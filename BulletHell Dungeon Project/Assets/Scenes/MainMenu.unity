@@ -142,7 +142,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 200, y: -191.99998}
-  m_SizeDelta: {x: 400, y: 106.666664}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &69336952
 MonoBehaviour:
@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.8627451, g: 0.8627451, b: 0.8627451, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -625,6 +625,7 @@ GameObject:
   - component: {fileID: 897336769}
   - component: {fileID: 897336771}
   - component: {fileID: 897336770}
+  - component: {fileID: 897336772}
   m_Layer: 5
   m_Name: Help Menu
   m_TagString: Untagged
@@ -684,6 +685,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 897336768}
+--- !u!114 &897336772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 897336768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818331dfce18abc4ba828968e7007d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 1367065884}
+  selectedObject: {fileID: 1376923091}
 --- !u!1 &1121014880
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +755,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.8627451, g: 0.8627451, b: 0.8627451, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -910,6 +924,7 @@ GameObject:
   - component: {fileID: 1292704310}
   - component: {fileID: 1292704312}
   - component: {fileID: 1292704311}
+  - component: {fileID: 1292704313}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -969,6 +984,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1292704309}
+--- !u!114 &1292704313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1292704309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818331dfce18abc4ba828968e7007d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 1367065884}
+  selectedObject: {fileID: 1121014880}
 --- !u!1 &1311127686
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,7 +1054,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.8627451, g: 0.8627451, b: 0.8627451, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -1130,8 +1158,8 @@ MonoBehaviour:
   m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
+  m_HorizontalAxis: ShootHorizontal
+  m_VerticalAxis: ShootVertical
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
@@ -1198,8 +1226,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -312.66666}
-  m_SizeDelta: {x: 400, y: 94.666664}
+  m_AnchoredPosition: {x: 200, y: -316}
+  m_SizeDelta: {x: 400, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376923093
 MonoBehaviour:
@@ -1661,8 +1689,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -59.333332}
-  m_SizeDelta: {x: 400, y: 118.666664}
+  m_AnchoredPosition: {x: 200, y: -56}
+  m_SizeDelta: {x: 400, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1882246185
 MonoBehaviour:
