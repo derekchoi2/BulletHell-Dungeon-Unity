@@ -247,14 +247,13 @@ public class PlayerController : MonoBehaviour {
 
 	void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
-		case PickupTypes.firerate:
+		case PickupTypes.firerateUp:
 			timeBetweenShots += pickup.value;
 			break;
 		case PickupTypes.sentry:
 			sentries.Add(Instantiate(pickup.SpawnPrefab, transform.position, Quaternion.identity));
 			break;
 		}
-		PickupController.Instance.PickupCollected ();
 	}
 
 	void DestroyProjectiles(){

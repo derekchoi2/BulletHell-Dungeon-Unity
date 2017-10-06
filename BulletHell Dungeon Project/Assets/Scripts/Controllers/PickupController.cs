@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum PickupTypes{
-	firerate, sentry
+	firerateUp, sentry
 }
-
 public class PickupController : MonoBehaviour {
+
+	[System.Serializable]
+	public class Pickup{
+		public PickupTypes type;
+		public GameObject PickupPrefab;
+		[Range(0f,100f)]public int RelativeRarity;
+	}
 
 	public static PickupController Instance = null;
 
-	public List<GameObject> PickupPrefabs;
+	[Range(0f, 100f)]public int DropChance;
+
+	public List<Pickup> Pickups;
 	public GameObject PickupTextPrefab;
-	public float PickupSpawnTime = 8f;
 	public float PickupTextDespawnTime = 1f;
-	public bool spawn = false;
 
-	private bool pickupSpawn;
-	private List<GameObject> pickupTexts = new List<GameObject>();
-	private List<GameObject> pickups = new List<GameObject>();
-
-	private GameController gameController;
+	private List<GameObject> spawnedTexts = new List<GameObject>();
+	private List<GameObject> spawnedPickups = new List<GameObject>();
 
 	void Awake(){
 		if (Instance == null) Instance = this;
@@ -29,71 +32,48 @@ public class PickupController : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 	}
 
-	// Use this for initialization
-	void Start () {
-		gameController = GameController.Instance;
-		pickupSpawn = false;
+	public void Clear(){
+		StopAllCoroutines ();
+		foreach (GameObject p in spawnedPickups)
+			Destroy (p);
+		foreach (GameObject text in spawnedTexts)
+			Destroy (text);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (pickupSpawn && spawn) {
-			spawn = false;
-			NewPickup ();
+
+	public void NewPickup(Vector3 position){
+		if (Random.Range (0, 100) <= DropChance) {
+			//see if enemy drops an item according to DropChance
+			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].PickupPrefab, position, Quaternion.identity));
 		}
-	}
-
-	public void LevelStart(){
-		spawn = true;
-		StartCoroutine (PickupSpawnTimer ());
-	}
-
-	public void LevelEnd(){
-		spawn = false;
-		StopAllCoroutines ();
-	}
-
-	public void Reset(){
-		StopAllCoroutines ();
-		foreach (GameObject pickup in pickups)
-			Destroy (pickup);
-		foreach (GameObject pickupText in pickupTexts)
-			Destroy (pickupText);
-		pickupSpawn = false;
-	}
-
-	void NewPickup(){
-		pickups.Add(Instantiate (PickupPrefabs [(int)RandomPickupType()], gameController.RandomPosition(), Quaternion.identity));
-	}
-
-	public void PickupCollected(){
-		StartCoroutine (PickupSpawnTimer ());
 	}
 
 	public void ShowPickupText(Vector3 position, string text){
 		GameObject newPickupText = Instantiate (PickupTextPrefab, position, Quaternion.Euler (new Vector3 (90, 0, 0)));
 		newPickupText.GetComponent<TextMesh> ().text = text;
-		pickupTexts.Add (newPickupText);
+		spawnedTexts.Add (newPickupText);
 		StartCoroutine (PickupTextTimer ());
 	}
 
 	PickupTypes RandomPickupType(){
-		//random enum value
-		return (PickupTypes)Random.Range (0, System.Enum.GetNames (typeof(PickupTypes)).Length);
-	}
+		//random enum value according to drop chaces
+		int weight = 0;
+		foreach (Pickup p in Pickups)
+			weight += p.RelativeRarity;
+		
+		int rand = Random.Range (0, weight);
+		foreach (Pickup p in Pickups) {
+			if (rand <= p.RelativeRarity)
+				return p.type;
+			rand -= p.RelativeRarity;
+		}
 
-	public void Clear(){
-		Reset ();
-	}
-
-	IEnumerator PickupSpawnTimer(){
-		yield return new WaitForSeconds (PickupSpawnTime);
-		pickupSpawn = true;
+		//this should never happen. prevents compiler errors
+		return (PickupTypes) 0;
 	}
 
 	IEnumerator PickupTextTimer(){
 		yield return new WaitForSeconds (PickupTextDespawnTime);
-		Destroy (pickupTexts[0]);
-		pickupTexts.RemoveAt (0);
+		Destroy (spawnedTexts[0]);
+		spawnedTexts.RemoveAt (0);
 	}
 }

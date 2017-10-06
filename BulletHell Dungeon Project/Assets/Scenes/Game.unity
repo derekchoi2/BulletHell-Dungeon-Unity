@@ -865,14 +865,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a9733bcac2824548b9134cfb4455ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PickupPrefabs:
-  - {fileID: 1603336551710584, guid: f7a474555751c5946be8cd3b5006c21c, type: 2}
-  - {fileID: 1603336551710584, guid: f75e804860747ac429e32a9605e6bfd1, type: 2}
+  DropChance: 50
+  Pickups:
+  - type: 0
+    PickupPrefab: {fileID: 1603336551710584, guid: f7a474555751c5946be8cd3b5006c21c,
+      type: 2}
+    RelativeRarity: 50
+  - type: 1
+    PickupPrefab: {fileID: 1603336551710584, guid: f75e804860747ac429e32a9605e6bfd1,
+      type: 2}
+    RelativeRarity: 10
   PickupTextPrefab: {fileID: 1072134938325682, guid: 93130f2257fdf7b408fb9f35b62185e7,
     type: 2}
-  PickupSpawnTime: 5
   PickupTextDespawnTime: 1
-  spawn: 0
 --- !u!114 &601343090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1684,7 +1689,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 2.5, y: 9.7}
+  m_AnchoredPosition: {x: 2.5, y: 9.700012}
   m_SizeDelta: {x: -5, y: 20}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1280515557

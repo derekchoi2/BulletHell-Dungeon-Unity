@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class SpriteListWrapper{
-	public States state;
-	public Directions direction;
-	public bool flip = false;
-	public float TimeBetweenSprites = 0.5f;
-	public List<Sprite> sprites;
-}
-
-
 public class SpriteAnimator : MonoBehaviour {
+
+	[System.Serializable]
+	public class SpriteListWrapper{
+		public States state;
+		public Directions direction;
+		public bool flip = false;
+		public float TimeBetweenSprites = 0.5f;
+		public List<Sprite> sprites;
+	}
+
 	public List<SpriteListWrapper> sprites;
 
 	private float currentTime;

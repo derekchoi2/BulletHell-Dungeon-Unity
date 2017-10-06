@@ -2,8 +2,7 @@ boss sublevel at the end of level
 - list of bosses to add in inspector
 - create/animate boss prefab
 
-- 3 player lives, boss drops a +1 health pickup
-	- ui indicator
-
 - plant prefab
 	- laser/beam weapon
+	
+- hub area

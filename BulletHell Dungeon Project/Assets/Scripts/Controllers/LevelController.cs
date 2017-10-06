@@ -66,13 +66,12 @@ public class LevelController : MonoBehaviour {
 	void LevelStart(){
 		playerController.Show ();
 		enemyController.LevelStart (level);
-		pickupController.LevelStart ();
 	}
 
 	void LevelEnd(){
 		//open doors stop all spawning
 		enemyController.LevelEnd();
-		pickupController.LevelEnd ();
+		pickupController.Clear ();
 		gameController.LevelEnd ();
 		HideDoors ();
 	}

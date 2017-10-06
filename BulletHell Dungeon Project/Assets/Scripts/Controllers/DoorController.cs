@@ -25,7 +25,7 @@ public class DoorController : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag("Player")){
 			//collide with player
-			Debug.Log("Player collide with door");
+			//Debug.Log("Player collide with door");
 		}
 	}
 }

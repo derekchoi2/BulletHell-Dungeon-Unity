@@ -77,7 +77,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Reset(){
-		pickupController.Reset ();
+		pickupController.Clear ();
 		enemyController.Reset ();
 	}
 
