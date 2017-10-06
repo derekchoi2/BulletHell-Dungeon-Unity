@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour {
 
 	private GameController gc;
 
+	public int health = 3;
+	private int maxHealth;
+
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
 	public float BasicProjectileSpeed = 40f;
@@ -60,8 +63,11 @@ public class PlayerController : MonoBehaviour {
 		savedTimeBetweenShots = timeBetweenShots;
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
+
+		maxHealth = health;
 		Reset ();
 		Hide ();
+
 	}
 
 	// Update is called once per frame
@@ -178,11 +184,26 @@ public class PlayerController : MonoBehaviour {
 			if ((collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile> ().owner == BasicProjectile.Owner.Enemy) ||
 			   collider.gameObject.CompareTag ("Enemy")) {
 				//player collide with enemy projectile OR enemy
-				DestroyProjectiles ();
-				DestroySentries ();
-				Hide ();
-				gc.PlayerDie ();
+				PlayerHit(collider.gameObject);
 			}
+		}
+	}
+
+	void PlayerHit(GameObject collider){
+		int damage;
+		//damage according to current enemy health or damage value of projectile depending on type
+		if (collider.CompareTag ("Enemy"))
+			damage = collider.GetComponentInChildren<HealthBar> ().health;
+		else
+			damage = collider.GetComponent<BasicProjectile> ().Damage;
+		
+		health = Mathf.Clamp (health - damage, 0, maxHealth);
+
+		if (health <= 0) {
+			DestroyProjectiles ();
+			DestroySentries ();
+			Hide ();
+			gc.PlayerDie ();
 		}
 	}
 
@@ -199,7 +220,7 @@ public class PlayerController : MonoBehaviour {
 		dead = false;
 	}
 
-	public void EnemyHit(){
+	public void EnemyKilled(){
 		score += ((gc.level - 1) * 3) + gc.sublevel;
 	}
 
@@ -251,6 +272,7 @@ public class PlayerController : MonoBehaviour {
 		direction = Directions.Unspecified;
 		animator.ChangeState (state, direction);
 		score = 0;
+		health = maxHealth;
 		timeBetweenShots = savedTimeBetweenShots;
 	}
 

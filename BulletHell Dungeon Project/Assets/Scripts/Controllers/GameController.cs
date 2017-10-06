@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour {
 	public Text timeBetweenEnemySpawnText;
 	public Text EnemiesLeftText;
 	public Text LevelText;
+	public Text PlayerHealthText;
 	public int level = 1;
 	public int sublevel = 1;
 
@@ -67,6 +68,7 @@ public class GameController : MonoBehaviour {
 		timeBetweenEnemySpawnText.text = "Time Between Enemy Spawns: " + enemyController.EnemySpawnTime;
 		EnemiesLeftText.text = "Enemies Left: " + levelController.enemiesToKill;
 		LevelText.text = "Level: " + level + "-" + sublevel;
+		PlayerHealthText.text = "Health: " + playerController.health;
 	}
 
 	void ClearRoom(){

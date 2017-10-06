@@ -75,10 +75,9 @@ public class EnemyController : MonoBehaviour {
 
 	}
 
-	public void EnemyHit(GameObject enemy){
+	public void EnemyKilled(GameObject enemy){
 		enemies.Remove (enemy);
 		Destroy (enemy);
-		PlayerController.Instance.EnemyHit();
 	}
 
 	void NewEnemy(EnemyTypes enemy){

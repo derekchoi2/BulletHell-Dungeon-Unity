@@ -54,16 +54,27 @@ public class NPC : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider){
-		if (collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile>().owner == BasicProjectile.Owner.Player) {
-			//player projectile collide with Enemy
-			healthBar.ChangeHealth(-collider.gameObject.GetComponent<BasicProjectile>().Damage);
-			healthBar.UpdateHealthBar ();
-			if (healthBar.isDead()){
-				LevelController.Instance.EnemyKilled();
-				EnemyController.Instance.EnemyHit(gameObject);
-				//projectiles.Remove (collider.gameObject);
+		if ((collider.gameObject.CompareTag ("Projectile") && collider.gameObject.GetComponent<BasicProjectile> ().owner == BasicProjectile.Owner.Player) || (!gameObject.CompareTag("Friendly") && collider.gameObject.CompareTag("Player"))) {
+			//player projectile or player collide with Enemy
+			int damage;
+			if (collider.gameObject.CompareTag ("Player")) {
+				damage = healthBar.health; //kill self if hit player, player takes damage equal to current health
+				EnemyController.Instance.EnemyKilled (gameObject); //remove enemy from screen
+				if (PlayerController.Instance.health > 0)
+					PlayerController.Instance.EnemyKilled (); //add score if player isn't dead
+			} else {
+				damage = collider.gameObject.GetComponent<BasicProjectile> ().Damage;
+				projectiles.Remove (collider.gameObject); //remove from list
+				Destroy (collider.gameObject); //destroy projectile
+				healthBar.ChangeHealth (-damage);
+				healthBar.UpdateHealthBar ();
+				if (healthBar.isDead ()) {
+					LevelController.Instance.EnemyKilled ();
+					EnemyController.Instance.EnemyKilled (gameObject);
+					PlayerController.Instance.EnemyKilled ();
+				}
 			}
-			Destroy (collider.gameObject); //destroy projectile
+
 		}
 	}
 

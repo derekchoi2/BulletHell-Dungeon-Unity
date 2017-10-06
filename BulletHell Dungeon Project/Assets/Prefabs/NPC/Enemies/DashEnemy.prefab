@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentValTransform: {fileID: 4724885898808614}
-  MaxHealth: 2
+  health: 2
 --- !u!114 &114303542171291536
 MonoBehaviour:
   m_ObjectHideFlags: 1

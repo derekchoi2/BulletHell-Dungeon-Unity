@@ -11,6 +11,8 @@ TagManager:
   - Projectile
   - Pickup
   - PickupText
+  - Friendly
+  - Undefined
   layers:
   - Default
   - TransparentFX

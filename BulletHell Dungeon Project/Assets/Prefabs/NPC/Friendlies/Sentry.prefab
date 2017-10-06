@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114824079607978356}
   m_Layer: 0
   m_Name: Sentry
-  m_TagString: Enemy
+  m_TagString: Friendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   DistanceThreshold: 5
   moveTime: 0.2
-  attackAnimationTime: 0.35
+  attacking: 0
 --- !u!212 &212005747624337940
 SpriteRenderer:
   m_ObjectHideFlags: 1

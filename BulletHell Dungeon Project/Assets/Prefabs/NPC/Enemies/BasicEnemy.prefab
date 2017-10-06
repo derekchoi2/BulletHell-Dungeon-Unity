@@ -473,7 +473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentValTransform: {fileID: 4111593905096356}
-  MaxHealth: 2
+  health: 2
 --- !u!212 &212120721155457142
 SpriteRenderer:
   m_ObjectHideFlags: 1

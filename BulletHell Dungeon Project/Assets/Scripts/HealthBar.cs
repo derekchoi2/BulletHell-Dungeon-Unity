@@ -7,26 +7,26 @@ public class HealthBar : MonoBehaviour {
 
 	public Transform currentValTransform;
 
-	public int MaxHealth;
-	private int CurrentHealth;
+	private int MaxHealth;
+	public int health;
 
 	void Start(){
-		CurrentHealth = MaxHealth;
+		MaxHealth = health;
 	}
 
 	public void ChangeHealth(int val){
-		CurrentHealth = Mathf.Clamp (CurrentHealth + val, 0, MaxHealth);
+		health = Mathf.Clamp (health + val, 0, MaxHealth);
 	}
 
 	public void UpdateHealthBar(){
-		float percentage = (float)CurrentHealth / (float)MaxHealth;
+		float percentage = (float)health / (float)MaxHealth;
 		Vector3 currentScale = currentValTransform.localScale;
 		currentValTransform.localScale = new Vector3(percentage, currentScale.y, currentScale.z);
 
 	}
 
 	public bool isDead(){
-		if (CurrentHealth <= 0)
+		if (health <= 0)
 			return true;
 		else
 			return false;
