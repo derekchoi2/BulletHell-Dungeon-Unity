@@ -11,8 +11,6 @@ public class PlayerController : MonoBehaviour {
 		else if (Instance != this) Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
-
-
 	}
 
 	public InnerJoystick leftJoystick;
@@ -37,12 +35,14 @@ public class PlayerController : MonoBehaviour {
 
 	private float savedTimeBetweenShots;
 
-	private List<GameObject> projectiles;
+	private List<GameObject> projectiles = new List<GameObject> ();
 	private float nextShot;
 	private float shotTimer = 0f;
 	private Vector3 startPos = new Vector3(0,1,0);
 
 	private Rigidbody rb;
+
+	private List<GameObject> sentries = new List<GameObject> ();
 
 	#if UNITY_IOS || UNITY_ANDROID
 	private bool enableJoysticks = true;
@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour {
 		savedTimeBetweenShots = timeBetweenShots;
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
-		projectiles = new List<GameObject> ();
 		Reset ();
 		Hide ();
 	}
@@ -70,6 +69,8 @@ public class PlayerController : MonoBehaviour {
 		if (!dead) {
 			Move ();
 			Shoot ();
+			if (sentries.Count > 0)
+				SpreadSentries ();
 		}
 	}
 
@@ -171,7 +172,6 @@ public class PlayerController : MonoBehaviour {
 			}
 
 			if (collider.gameObject.CompareTag ("Pickup")) {
-				Debug.Log ("Player detect pickup");
 				CollectPickup (collider.gameObject.GetComponent<Pickup> ());
 			}
 
@@ -179,6 +179,7 @@ public class PlayerController : MonoBehaviour {
 			   collider.gameObject.CompareTag ("Enemy")) {
 				//player collide with enemy projectile OR enemy
 				DestroyProjectiles ();
+				DestroySentries ();
 				Hide ();
 				gc.PlayerDie ();
 			}
@@ -218,12 +219,18 @@ public class PlayerController : MonoBehaviour {
 			nextPos = new Vector3 (x * -1, y, z);
 		rb.position = nextPos;
 
+		//position sentries on player, allow them to spread naturally
+		foreach (GameObject sentry in sentries)
+			sentry.transform.position = rb.position;
 	}
 
 	void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
 		case PickupTypes.firerate:
 			timeBetweenShots += pickup.value;
+			break;
+		case PickupTypes.sentry:
+			sentries.Add(Instantiate(pickup.SpawnPrefab, transform.position, Quaternion.identity));
 			break;
 		}
 		PickupController.Instance.PickupCollected ();
@@ -239,11 +246,40 @@ public class PlayerController : MonoBehaviour {
 	public void Reset(){
 		DestroyProjectiles ();
 		ResetPos ();
+		DestroySentries ();
 		state = States.Idle;
 		direction = Directions.Unspecified;
 		animator.ChangeState (state, direction);
 		score = 0;
 		timeBetweenShots = savedTimeBetweenShots;
+	}
+
+	void SpreadSentries(){
+		for (int i = 0; i < sentries.Count; i++) {
+			for (int j = 0; j < sentries.Count; j++) {
+				if (i != j) { //don't compare same indexes
+					float distance = Vector3.Distance (sentries [i].transform.position, sentries [j].transform.position);
+					if (distance < 2) {
+						if (distance == 0) {
+							//if distance 0, won't go anywhere. nudge i's x by 0.5
+							Vector3 tempPos = sentries [i].transform.position;
+							tempPos.x += 0.5f; 
+							sentries [i].transform.position = tempPos;
+						} else {
+							sentries [i].transform.position += (sentries [i].transform.position - sentries [j].transform.position).normalized * Time.deltaTime;
+							sentries [j].transform.position += (sentries [j].transform.position - sentries [i].transform.position).normalized * Time.deltaTime;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void DestroySentries(){
+		foreach (GameObject sentry in sentries) {
+			Destroy (sentry);
+		}
+		sentries.Clear ();
 	}
 
 	public void ResetPos(){
@@ -277,6 +313,5 @@ public class PlayerController : MonoBehaviour {
 		}
 		//default
 		return Directions.Unspecified;
-		
 	}
 }

@@ -7,7 +7,3 @@ boss sublevel at the end of level
 
 - plant prefab
 	- laser/beam weapon
-
-- Enemy class rename to NPC, add toggle for friendly/enemy
-
-- sentry prefab

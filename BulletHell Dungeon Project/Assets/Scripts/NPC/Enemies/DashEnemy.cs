@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashEnemy : Enemy {
+public class DashEnemy : NPC {
 
 
 	public float moveTime;
@@ -30,8 +30,6 @@ public class DashEnemy : Enemy {
 		if (PlayerController.Instance != null) {
 			Vector3 dir;
 			if (changeVelocity) {
-				changeVelocity = false;
-				Debug.Log ("change velocity");
 				dir = (PlayerController.Instance.transform.position - transform.position).normalized;
 
 				if (state == States.Attack)

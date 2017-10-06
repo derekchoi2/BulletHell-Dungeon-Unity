@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour {
 
 	public void Clear(){
 		foreach (GameObject enemy in enemies) {
-			enemy.GetComponent<Enemy> ().ClearProjectiles ();
+			enemy.GetComponent<NPC> ().ClearProjectiles ();
 			Destroy (enemy);
 		}
 		enemies.Clear ();
@@ -99,5 +99,9 @@ public class EnemyController : MonoBehaviour {
 	public IEnumerator EnemySpawnTimer() {
 		yield return new WaitForSeconds(EnemySpawnTime); // wait
 		enemySpawn = true; // will make the update method pick up 
+	}
+
+	public List<GameObject> GetEnemies() {
+		return enemies;
 	}
 }

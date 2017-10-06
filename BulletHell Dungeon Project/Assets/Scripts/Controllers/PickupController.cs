@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum PickupTypes{
-	firerate
+	firerate, sentry
 }
 
 public class PickupController : MonoBehaviour {
@@ -17,8 +17,8 @@ public class PickupController : MonoBehaviour {
 	public bool spawn = false;
 
 	private bool pickupSpawn;
-	private GameObject currentPickupText;
-	private GameObject currentPickup;
+	private List<GameObject> pickupTexts = new List<GameObject>();
+	private List<GameObject> pickups = new List<GameObject>();
 
 	private GameController gameController;
 
@@ -55,13 +55,15 @@ public class PickupController : MonoBehaviour {
 
 	public void Reset(){
 		StopAllCoroutines ();
-		Destroy (currentPickup);
-		Destroy (currentPickupText);
-		Start ();
+		foreach (GameObject pickup in pickups)
+			Destroy (pickup);
+		foreach (GameObject pickupText in pickupTexts)
+			Destroy (pickupText);
+		pickupSpawn = false;
 	}
 
 	void NewPickup(){
-		currentPickup = Instantiate (PickupPrefabs [(int)RandomPickupType()], gameController.RandomPosition(), Quaternion.identity);
+		pickups.Add(Instantiate (PickupPrefabs [(int)RandomPickupType()], gameController.RandomPosition(), Quaternion.identity));
 	}
 
 	public void PickupCollected(){
@@ -69,8 +71,9 @@ public class PickupController : MonoBehaviour {
 	}
 
 	public void ShowPickupText(Vector3 position, string text){
-		currentPickupText = Instantiate (PickupTextPrefab, position, Quaternion.Euler (new Vector3 (90, 0, 0)));
-		currentPickupText.GetComponent<TextMesh> ().text = text;
+		GameObject newPickupText = Instantiate (PickupTextPrefab, position, Quaternion.Euler (new Vector3 (90, 0, 0)));
+		newPickupText.GetComponent<TextMesh> ().text = text;
+		pickupTexts.Add (newPickupText);
 		StartCoroutine (PickupTextTimer ());
 	}
 
@@ -90,6 +93,7 @@ public class PickupController : MonoBehaviour {
 
 	IEnumerator PickupTextTimer(){
 		yield return new WaitForSeconds (PickupTextDespawnTime);
-		Destroy (currentPickupText);
+		Destroy (pickupTexts[0]);
+		pickupTexts.RemoveAt (0);
 	}
 }

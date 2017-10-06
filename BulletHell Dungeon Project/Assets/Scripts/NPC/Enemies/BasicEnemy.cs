@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemy : Enemy {
+public class BasicEnemy : NPC {
 
 	public float directionChangeTime = 2f;
 	public float stationaryTime = 1f;
