@@ -6,3 +6,7 @@ boss sublevel at the end of level
 	- laser/beam weapon
 	
 - hub area
+
+- laser gun pickup prefab
+- make player change weapon after picking up laser gun
+- laser "projectile" prefab
