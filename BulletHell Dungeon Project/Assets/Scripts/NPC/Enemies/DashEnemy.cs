@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DashEnemy : NPC {
 
-
 	public float moveTime;
 	public float attackTime;
 

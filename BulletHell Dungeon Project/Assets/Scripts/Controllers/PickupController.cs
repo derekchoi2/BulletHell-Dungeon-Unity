@@ -6,6 +6,14 @@ public enum PickupTypes{
 	firerateUp, sentry
 }
 public class PickupController : MonoBehaviour {
+	
+	public static PickupController Instance = null;
+	void Awake(){
+		if (Instance == null) Instance = this;
+		else if (Instance != this) Destroy(gameObject);
+
+		DontDestroyOnLoad(gameObject);
+	}
 
 	[System.Serializable]
 	public class Pickup{
@@ -13,8 +21,6 @@ public class PickupController : MonoBehaviour {
 		public GameObject PickupPrefab;
 		[Range(0f,100f)]public int RelativeRarity;
 	}
-
-	public static PickupController Instance = null;
 
 	[Range(0f, 100f)]public int DropChance;
 
@@ -25,12 +31,7 @@ public class PickupController : MonoBehaviour {
 	private List<GameObject> spawnedTexts = new List<GameObject>();
 	private List<GameObject> spawnedPickups = new List<GameObject>();
 
-	void Awake(){
-		if (Instance == null) Instance = this;
-		else if (Instance != this) Destroy(gameObject);
 
-		DontDestroyOnLoad(gameObject);
-	}
 
 	public void Clear(){
 		StopAllCoroutines ();

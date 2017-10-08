@@ -41,8 +41,6 @@ public class BasicEnemy : NPC {
 					CalculateDirection (dir);
 					//perform movement
 					moveVelocity = dir * movespeed * Time.deltaTime;
-
-
 				} else {
 					moveVelocity = Vector3.zero;
 					state = States.Idle;
@@ -58,7 +56,7 @@ public class BasicEnemy : NPC {
 		}
 	}
 
-	protected override void Shoot(){
+	protected override void Attack(){
 		ProjectileTimer ();
 	}
 

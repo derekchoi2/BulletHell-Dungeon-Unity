@@ -889,7 +889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec210afb7c8e47f47937ee1575d2b13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelTimer: 2
+  levelTimer: 1
   totalEnemies: 0
   enemiesToKill: 0
   enemiesSpawned: 0
@@ -1953,42 +1953,6 @@ Prefab:
     - target: {fileID: 4171278378923354, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
       propertyPath: m_RootOrder
       value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4171278378923354, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4171278378923354, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4742507773762828, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4742507773762828, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 65680590360776670, guid: d99c62cd393976741b5cf4624bf864db,
-        type: 2}
-      propertyPath: m_Size.x
-      value: 3.47
-      objectReference: {fileID: 0}
-    - target: {fileID: 65680590360776670, guid: d99c62cd393976741b5cf4624bf864db,
-        type: 2}
-      propertyPath: m_Size.z
-      value: 5.67
-      objectReference: {fileID: 0}
-    - target: {fileID: 65680590360776670, guid: d99c62cd393976741b5cf4624bf864db,
-        type: 2}
-      propertyPath: m_Center.z
-      value: -0.29
-      objectReference: {fileID: 0}
-    - target: {fileID: 65680590360776670, guid: d99c62cd393976741b5cf4624bf864db,
-        type: 2}
-      propertyPath: m_Center.x
-      value: 0.08
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d99c62cd393976741b5cf4624bf864db, type: 2}

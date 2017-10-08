@@ -24,23 +24,19 @@ public class PlayerController : MonoBehaviour {
 	public int health = 3;
 	private int maxHealth;
 
-	public GameObject projectile;
-	public float timeBetweenShots = 0.5f;
-	public float BasicProjectileSpeed = 40f;
+	public GameObject BaseWeapon;
+	[HideInInspector] public GameObject CurrentWeapon;
+	private Weapon CurrentWeaponScript;
+	public GameObject WeaponSpawnOrigin;
+
 	public float speed = 20f;
 	public float score = 0f;
-	private bool dead = false;
+	private bool dead = true;
 
-	private States state;
-	private Directions direction;
+	public States state;
+	public Directions direction;
 	private SpriteAnimator animator;
 	private SpriteRenderer spriteRenderer;
-
-	private float savedTimeBetweenShots;
-
-	private List<GameObject> projectiles = new List<GameObject> ();
-	private float nextShot;
-	private float shotTimer = 0f;
 	private Vector3 startPos = new Vector3(0,1,0);
 
 	private Rigidbody rb;
@@ -59,81 +55,41 @@ public class PlayerController : MonoBehaviour {
 		direction = Directions.Unspecified;
 		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
-		nextShot = timeBetweenShots;
-		savedTimeBetweenShots = timeBetweenShots;
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
 
 		maxHealth = health;
 		Reset ();
 		Hide ();
-
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (!dead) {
-			Move ();
-			Shoot ();
+			Vector3 moveVec = Vector3.zero, shootVec = Vector3.zero;
+			if (!enableJoysticks) {
+				shootVec.x = Input.GetAxis ("ShootHorizontal");
+				shootVec.z = Input.GetAxis ("ShootVertical");
+				moveVec.x = Input.GetAxisRaw ("Horizontal");
+				moveVec.z = Input.GetAxisRaw ("Vertical");
+			} else {
+				shootVec.x = rightStickVec.x;
+				shootVec.z = rightStickVec.y;
+				moveVec.x = leftStickVec.x;
+				moveVec.z = leftStickVec.y;
+			}
+
+			Move (moveVec);
+			CurrentWeaponScript.Shoot (shootVec);
+
 			if (sentries.Count > 0)
 				SpreadSentries ();
 		}
 	}
 
-	void Shoot(){
-		shotTimer = shotTimer + Time.deltaTime;
+	void Move(Vector3 moveVec){
 
-		if (shotTimer > nextShot) {	
-			if (state == States.Attack) {
-				state = States.Idle;
-				animator.ChangeState (state, direction);
-			}
-
-			float shootVertical, shootHorizontal;
-			if (!enableJoysticks) {
-				shootVertical = Input.GetAxis ("ShootVertical");
-				shootHorizontal = Input.GetAxis ("ShootHorizontal");
-			} else {
-				shootHorizontal = rightStickVec.x;
-				shootVertical = rightStickVec.y;
-			}
-
-			if (shootVertical != 0 || shootHorizontal != 0) {
-				nextShot = shotTimer + timeBetweenShots;
-				FireProjectile (shootHorizontal, shootVertical);
-				nextShot = nextShot - shotTimer;
-				shotTimer = 0.0F;
-			}
-		}
-	}
-
-	void FireProjectile(float shootHorizontal, float shootVertical){
-		GameObject projectileInstance = Instantiate (projectile, transform.position, transform.rotation);
-		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
-		projectileScript.owner = BasicProjectile.Owner.Player;
-
-		Vector3 dir = new Vector3 (shootHorizontal, 0, shootVertical).normalized;
-
-		Directions attackdir = CalculateDirection (dir);
-
-		state = States.Attack;
-		animator.ChangeState (state, attackdir);
-		projectileScript.SetVelocity (dir * BasicProjectileSpeed * Time.fixedDeltaTime);
-
-		projectiles.Add (projectileInstance);
-	}
-
-	void Move(){
-		float moveHorizontal, moveVertical;
-		if (!enableJoysticks) {
-			moveHorizontal = Input.GetAxisRaw ("Horizontal");
-			moveVertical = Input.GetAxisRaw ("Vertical");
-		} else {
-			moveHorizontal = leftStickVec.x;
-			moveVertical = leftStickVec.y;
-		}
-
-		Vector3 dir = new Vector3 (moveHorizontal, 0, moveVertical).normalized;
+		Vector3 dir = moveVec.normalized;
 
 		rb.velocity = dir * speed;
 
@@ -149,7 +105,7 @@ public class PlayerController : MonoBehaviour {
 		if (newDir == Directions.NW || newDir == Directions.SW)
 			newDir = Directions.W;
 
-		if (moveHorizontal != 0 || moveVertical != 0) {
+		if (moveVec.sqrMagnitude != 0) {
 			if (state == States.Idle) {
 				state = States.Move;
 				direction = newDir;
@@ -168,7 +124,6 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	//if hit door, reset position
 	void OnTriggerEnter(Collider collider){
 		if (!dead) {
 			if (collider.gameObject.CompareTag ("Door")) {
@@ -200,23 +155,34 @@ public class PlayerController : MonoBehaviour {
 		health = Mathf.Clamp (health - damage, 0, maxHealth);
 
 		if (health <= 0) {
-			DestroyProjectiles ();
+			CurrentWeaponScript.Reset ();
+			CurrentWeapon = BaseWeapon;
 			DestroySentries ();
 			Hide ();
 			gc.PlayerDie ();
 		}
 	}
 
+	public void SwapWeapon(GameObject NewWeapon){
+		if (CurrentWeapon != NewWeapon) {
+			Destroy (CurrentWeapon);
+			CurrentWeapon = Instantiate (NewWeapon, WeaponSpawnOrigin.transform);
+			CurrentWeaponScript = CurrentWeapon.GetComponent<Weapon> ();
+		}
+	}
+
 	public void Hide(){
 		spriteRenderer.enabled = false;
+		if (CurrentWeaponScript != null)
+			CurrentWeaponScript.Hide ();
 		dead = true;
 	}
 
 	public void Show(){
 		spriteRenderer.enabled = true;
-		if (dead) {
+		SwapWeapon (BaseWeapon);
+		if (dead)
 			Reset ();
-		}
 		dead = false;
 	}
 
@@ -248,7 +214,7 @@ public class PlayerController : MonoBehaviour {
 	void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
 		case PickupTypes.firerateUp:
-			timeBetweenShots += pickup.value;
+			CurrentWeaponScript.timeBetweenShots += pickup.value;
 			break;
 		case PickupTypes.sentry:
 			sentries.Add(Instantiate(pickup.SpawnPrefab, transform.position, Quaternion.identity));
@@ -256,15 +222,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void DestroyProjectiles(){
-		foreach (GameObject projectile in projectiles) {
-			Destroy (projectile);
-		}
-		projectiles.Clear ();
-	}
-
 	public void Reset(){
-		DestroyProjectiles ();
 		ResetPos ();
 		DestroySentries ();
 		state = States.Idle;
@@ -272,7 +230,14 @@ public class PlayerController : MonoBehaviour {
 		animator.ChangeState (state, direction);
 		score = 0;
 		health = maxHealth;
-		timeBetweenShots = savedTimeBetweenShots;
+		if (CurrentWeaponScript != null)
+			CurrentWeaponScript.Reset ();
+	}
+
+	public void ChangeState(States state, Vector3 dirVec){
+		this.state = state;
+		direction = CalculateDirection (dirVec);
+		animator.ChangeState (state, direction);
 	}
 
 	void SpreadSentries(){

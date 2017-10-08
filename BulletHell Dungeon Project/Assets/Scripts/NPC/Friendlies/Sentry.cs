@@ -81,7 +81,7 @@ public class Sentry: NPC {
 		}
 	}
 
-	protected override void Shoot(){
+	protected override void Attack(){
 		if (EnemyController.Instance.GetEnemies ().Count > 0)
 			ProjectileTimer ();
 		else

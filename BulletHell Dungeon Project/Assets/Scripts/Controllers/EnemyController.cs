@@ -76,7 +76,6 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	public void EnemyKilled(GameObject enemy){
-		PickupController.Instance.NewPickup (enemy.transform.position);
 		enemies.Remove (enemy);
 		Destroy (enemy);
 	}
