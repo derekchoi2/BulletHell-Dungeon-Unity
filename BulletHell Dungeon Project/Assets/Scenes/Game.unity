@@ -792,6 +792,7 @@ GameObject:
   - component: {fileID: 601343089}
   - component: {fileID: 601343088}
   - component: {fileID: 601343090}
+  - component: {fileID: 601343091}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -870,9 +871,17 @@ MonoBehaviour:
   - type: 0
     PickupPrefab: {fileID: 1603336551710584, guid: f7a474555751c5946be8cd3b5006c21c,
       type: 2}
-    RelativeRarity: 50
+    RelativeRarity: 0
   - type: 1
     PickupPrefab: {fileID: 1603336551710584, guid: f75e804860747ac429e32a9605e6bfd1,
+      type: 2}
+    RelativeRarity: 0
+  - type: 2
+    PickupPrefab: {fileID: 1943747160434380, guid: ad8324f8d66c4914593d3b0e8b901b5c,
+      type: 2}
+    RelativeRarity: 10
+  - type: 3
+    PickupPrefab: {fileID: 1023371573025672, guid: 65bfa1cd8970b2443aa466818a440f75,
       type: 2}
     RelativeRarity: 10
   PickupTextPrefab: {fileID: 1072134938325682, guid: 93130f2257fdf7b408fb9f35b62185e7,
@@ -899,6 +908,20 @@ MonoBehaviour:
   - {fileID: 838879646}
   - {fileID: 353876543}
   - {fileID: 335130785}
+--- !u!114 &601343091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601343085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40244da883a8a8c408819ee008f8afce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Weapons:
+  - {fileID: 1218061480363192, guid: cc92ccbb01096a34cbbf43467fdb960e, type: 2}
+  - {fileID: 1724967250257640, guid: 780b76ed598ad984ba9b303079b3937f, type: 2}
 --- !u!1 &602380049
 GameObject:
   m_ObjectHideFlags: 0

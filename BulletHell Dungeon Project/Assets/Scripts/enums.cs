@@ -1,8 +1,4 @@
-﻿public enum WeaponType{
-	basic, triple//, beam
-}
-
-public enum States{
+﻿public enum States{
 	Idle, Attack, Hit, Die, Move
 }
 
@@ -12,4 +8,12 @@ public enum Directions{
 
 public enum EnemyTypes{
 	basic, fast
+}
+
+public enum PickupTypes{
+	firerateUp, sentry, basicWeapon, tridentWeapon
+}
+
+public enum WeaponTypes{
+	basic, triple
 }

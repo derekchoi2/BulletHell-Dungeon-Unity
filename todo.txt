@@ -10,7 +10,3 @@ boss sublevel at the end of level
 - laser gun pickup prefab
 - make player change weapon after picking up laser gun
 - laser "projectile" prefab
-
-- Weapons System
-	- Prefab for trident weapon pickup
-		- shoots 3 projectiles

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PickupTypes{
-	firerateUp, sentry
-}
 public class PickupController : MonoBehaviour {
 	
 	public static PickupController Instance = null;
@@ -57,12 +54,19 @@ public class PickupController : MonoBehaviour {
 
 	PickupTypes RandomPickupType(){
 		//random enum value according to drop chaces
+
+		//remove current weapon from list temporarily so it doesn't drop as a pickup
+		List<Pickup> temp = new List<Pickup>();
 		int weight = 0;
-		foreach (Pickup p in Pickups)
-			weight += p.RelativeRarity;
+		foreach (Pickup p in Pickups) {
+			if (p.type != PlayerController.Instance.CurrentWeapon.GetComponent<Weapon> ().PickupType) {
+				temp.Add (p);
+				weight += p.RelativeRarity;
+			}
+		}
 		
 		int rand = Random.Range (0, weight);
-		foreach (Pickup p in Pickups) {
+		foreach (Pickup p in temp) {
 			if (rand <= p.RelativeRarity)
 				return p.type;
 			rand -= p.RelativeRarity;

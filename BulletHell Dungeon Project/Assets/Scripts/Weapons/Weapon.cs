@@ -4,52 +4,48 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour {
 
-	public WeaponType Type;
+	public WeaponTypes Type;
+	public PickupTypes PickupType;
 	public float ProjectileSpeed = 40f;
 	public float timeBetweenShots = 0.5f;
+	public bool shootDelaying = false;
 
 	protected List<GameObject> projectiles = new List<GameObject>();
 
 	protected SpriteAnimator animator;
-	protected float nextShot;
-	protected float shotTimer = 0f;
 	protected float savedTimeBetweenShots;
 
-	protected PlayerController player;
-
 	void Awake(){
-		nextShot = timeBetweenShots;
 		savedTimeBetweenShots = timeBetweenShots;
 		animator = GetComponent<SpriteAnimator> ();
 	}
 
-	public abstract void Shoot (Vector3 shootVec);
-
-	protected void GetPlayer(){
-		player = PlayerController.Instance;
+	public void Shoot (Vector3 shootVec){
+		if (!shootDelaying) {
+			WeaponSpecific(shootVec);
+			shootDelaying = true;
+			StopAllCoroutines ();
+			StartCoroutine (ShotTimer ());
+		}
 	}
+
+	protected abstract void WeaponSpecific (Vector3 shootVec);
 
 	protected void FireProjectile(Vector3 shootVec, GameObject projectile){
 		//spawn under player sprite
 		Vector3 spawnVec = transform.position;
 		spawnVec.y -= 1;
 
-		GameObject projectileInstance = Instantiate (projectile, spawnVec, transform.rotation);
+		GameObject projectileInstance = Instantiate (projectile, spawnVec, Quaternion.identity);
 		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
 		projectileScript.owner = BasicProjectile.Owner.Player;
-
-		player.ChangeState(States.Attack, shootVec);
 		projectileScript.SetVelocity (shootVec * ProjectileSpeed * Time.fixedDeltaTime);
 
 		projectiles.Add (projectileInstance);
 	}
 
-	public void ChangeState(States state, Directions playerDir, Directions dir){
-		if (player == null)
-			GetPlayer ();
-		
-		if (player.MoveShootSame (playerDir, dir) || state == States.Idle)
-			animator.ChangeState (state, dir);
+	public void ChangeState(States state, Directions dir){
+		animator.ChangeState (state, dir);
 	}
 
 	public void Hide(){
@@ -74,6 +70,11 @@ public abstract class Weapon : MonoBehaviour {
 			Destroy (projectile);
 		}
 		projectiles.Clear ();
+	}
+
+	IEnumerator ShotTimer(){
+		yield return new WaitForSeconds (timeBetweenShots + 0.01f);
+		shootDelaying = false;
 	}
 
 }

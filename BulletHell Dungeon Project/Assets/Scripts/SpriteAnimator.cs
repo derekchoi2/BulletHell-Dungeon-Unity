@@ -64,7 +64,6 @@ public class SpriteAnimator : MonoBehaviour {
 		currentTime += Time.deltaTime;
 
 		if (currentTime > sprites[currentIndex].TimeBetweenSprites) {
-			
 			currentTime = 0;
 			currentSprite++;
 			if (currentSprite >= sprites [currentIndex].sprites.Count) {

@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject BaseWeapon;
 	[HideInInspector] public GameObject CurrentWeapon;
-	private Weapon CurrentWeaponScript;
+	public Weapon CurrentWeaponScript;
 	public GameObject WeaponSpawnOrigin;
 
 	public float speed = 20f;
@@ -35,11 +35,16 @@ public class PlayerController : MonoBehaviour {
 	private bool dead = true;
 
 	public States state;
-	public Directions direction;
-	private Directions shootDirection;
-	private SpriteAnimator animator;
 	private SpriteRenderer spriteRenderer;
 	private Vector3 startPos = new Vector3(0,1,0);
+
+	Vector3 moveVec = Vector3.zero;
+	Vector3 shootVec = Vector3.zero;
+
+	private FSM fsm;
+	private Idle idle;
+	private Move move;
+	private Attack attack;
 
 	private Rigidbody rb;
 
@@ -53,52 +58,73 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		state = States.Idle;
-		direction = Directions.Unspecified;
-		animator = gameObject.GetComponentInChildren<SpriteAnimator> ();
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
-
 		maxHealth = health;
 		Reset ();
 		Hide ();
+
+		//STATE MACHINE INITIALISATION
+		fsm = new FSM();
+		idle = new Idle ();
+		move = new Move ();
+		attack = new Attack ();
+
+		idle.AddTransition (new Transition (move, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0));
+		idle.AddTransition (new Transition (attack, () => shootVec.sqrMagnitude != 0));
+		attack.AddTransition (new Transition (move, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
+		attack.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
+		move.AddTransition (new Transition (attack, () => shootVec.sqrMagnitude != 0));
+		move.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0));
+
+		fsm.AddState (idle);
+		fsm.AddState (move);
+		fsm.AddState (attack);
+
+		fsm.Init (idle, Directions.Unspecified);
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (!dead) {
-			Vector3 moveVec = Vector3.zero, shootVec = Vector3.zero;
-			if (!enableJoysticks) {
-				shootVec.x = Input.GetAxisRaw ("ShootHorizontal");
-				shootVec.z = Input.GetAxisRaw ("ShootVertical");
-				moveVec.x = Input.GetAxisRaw ("Horizontal");
-				moveVec.z = Input.GetAxisRaw ("Vertical");
-			} else {
-				shootVec.x = rightStickVec.x;
-				shootVec.z = rightStickVec.y;
-				moveVec.x = leftStickVec.x;
-				moveVec.z = leftStickVec.y;
-			}
 
-			Move (moveVec.normalized);
+			state = fsm.CurrentState.state;
 
-			Directions shootDir = CalculateDirection (shootVec.normalized);
-			if (shootDir != Directions.Unspecified)
-				shootDirection = shootDir;
-			
-			CurrentWeaponScript.Shoot (shootVec.normalized);
+			GetInputVectors (); //gets normalised input into moveVec and shootVec
+
+			fsm.Update ();
+			fsm.UpdateDirection (CalculateDirection (moveVec));
+
+			if (state != States.Idle)
+				Move ();
+
+			if (shootVec.sqrMagnitude > 0)
+				CurrentWeaponScript.Shoot (shootVec);
 
 			if (sentries.Count > 0)
 				SpreadSentries ();
 		}
 	}
 
-	void Move(Vector3 moveVec){
-		Directions moveDir = CalculateDirection (moveVec);
-		Directions shootDir = moveDir;
+	void GetInputVectors(){
+		if (!enableJoysticks) {
+			shootVec.x = Input.GetAxisRaw ("ShootHorizontal");
+			shootVec.z = Input.GetAxisRaw ("ShootVertical");
+			moveVec.x = Input.GetAxisRaw ("Horizontal");
+			moveVec.z = Input.GetAxisRaw ("Vertical");
+		} else {
+			shootVec.x = rightStickVec.x;
+			shootVec.z = rightStickVec.y;
+			moveVec.x = leftStickVec.x;
+			moveVec.z = leftStickVec.y;
+		}
+		shootVec = shootVec.normalized;
+		moveVec = moveVec.normalized;
+	}
 
-		if (state == States.Attack && !MoveShootSame(moveDir, shootDirection))
+	void Move(){
+		if (state == States.Attack && !SameDir(CalculateDirection(moveVec), CalculateDirection(shootVec)))
 			rb.velocity = moveVec * speed * speedPenaltyMultiplier;
 		else
 			rb.velocity = moveVec * speed;
@@ -107,32 +133,6 @@ public class PlayerController : MonoBehaviour {
 			Mathf.Clamp (rb.position.x, GameController.Instance.boundary.xMin, GameController.Instance.boundary.xMax),
 			0f,
 			Mathf.Clamp (rb.position.z, GameController.Instance.boundary.zMin, GameController.Instance.boundary.zMax));
-
-		//smooth out directional movement animations
-		if (moveDir == Directions.NE || moveDir == Directions.SE)
-			moveDir = Directions.E;
-		if (moveDir == Directions.NW || moveDir == Directions.SW)
-			moveDir = Directions.W;
-
-		if (moveVec.sqrMagnitude != 0) {
-			if (state == States.Idle) {
-				state = States.Move;
-				direction = moveDir;
-				ChangeState (state, direction, shootDir);
-			} else if (direction != moveDir) {
-				direction = moveDir;
-				ChangeState (state, direction, shootDir);
-			}
-			if (shootDirection != shootDir) {
-				shootDirection = shootDir;
-				ChangeShootDir (shootDirection);
-			}
-		} else if (state != States.Idle && state != States.Attack) {
-			state = States.Idle;
-			direction = Directions.Unspecified;
-			ChangeState (state, direction, shootDir);
-		}
-
 	}
 
 	void OnTriggerEnter(Collider collider){
@@ -168,8 +168,6 @@ public class PlayerController : MonoBehaviour {
 		health = Mathf.Clamp (health - damage, 0, maxHealth);
 
 		if (health <= 0) {
-			CurrentWeaponScript.Reset ();
-			CurrentWeapon = BaseWeapon;
 			DestroySentries ();
 			Hide ();
 			gc.PlayerDie ();
@@ -195,7 +193,6 @@ public class PlayerController : MonoBehaviour {
 		spriteRenderer.enabled = true;
 		if (CurrentWeaponScript != null)
 			CurrentWeaponScript.Show ();
-		SwapWeapon (BaseWeapon);
 		if (dead)
 			Reset ();
 		dead = false;
@@ -234,51 +231,26 @@ public class PlayerController : MonoBehaviour {
 		case PickupTypes.sentry:
 			sentries.Add(Instantiate(pickup.SpawnPrefab, transform.position, Quaternion.identity));
 			break;
+		case PickupTypes.basicWeapon:
+			SwapWeapon (WeaponsList.Instance.GetWeaponOfType (WeaponTypes.basic));
+			break;
+		case PickupTypes.tridentWeapon:
+			SwapWeapon (WeaponsList.Instance.GetWeaponOfType (WeaponTypes.triple));
+			break;
 		}
 	}
 
 	public void Reset(){
 		ResetPos ();
 		DestroySentries ();
-		state = States.Idle;
-		direction = Directions.Unspecified;
-		ChangeState (state, direction, direction);
 		score = 0;
 		health = maxHealth;
+		SwapWeapon (BaseWeapon);
 		if (CurrentWeaponScript != null)
 			CurrentWeaponScript.Reset ();
 	}
 
-	public void ChangeState(States state, Vector3 shootVec){
-		Directions shootDir = CalculateDirection (shootVec);
-		ChangeState (state, direction, shootDir);
-	}
-
-	public void ChangeState(States state, Directions direction){
-		//direction applies to both shoot and move
-		this.direction = direction;
-		ChangeState (state, direction, direction);
-	}
-
-	public void ChangeState(States state, Vector3 dirVec, Directions shootDir){
-		direction = CalculateDirection (dirVec);
-		ChangeState (state, direction, shootDir);
-	}
-
-	void ChangeState(States state, Directions direction, Directions shootDir){
-		this.state = state;
-		animator.ChangeState (state, direction);
-		ChangeShootDir (shootDir);
-	}
-
-	void ChangeShootDir(Directions shootDir){
-		if (CurrentWeaponScript != null) {
-			CurrentWeaponScript.ChangeState (state, direction, shootDir);
-		}
-	}
-
-	public bool MoveShootSame(Directions move, Directions shoot){
-		Debug.Log (move.ToString () + " " + shoot.ToString ());
+	bool SameDir(Directions move, Directions shoot){
 		switch (move) {
 		case Directions.N:
 			if (shoot == Directions.NE || shoot == Directions.N || shoot == Directions.NW)
