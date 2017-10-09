@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC : MonoBehaviour {
+public abstract class NPC : MonoBehaviour {
 
 	public float movespeed = 5f;
 	public GameObject projectile;
@@ -20,10 +20,9 @@ public class NPC : MonoBehaviour {
 	protected Vector3 moveVelocity = Vector3.zero;
 	protected bool changeVelocity = true; //enemies start moving when they spawn
 
-	protected virtual void FireProjectile(){}
+	protected virtual void FireProjectile (){}
 	protected virtual void Move (){}
-	protected virtual void Attack(){}
-	protected virtual void Shoot(){}
+	protected virtual void Attack (){}
 
 	protected void ProjectileTimer(){
 		shotTimer = shotTimer + Time.deltaTime;
@@ -38,10 +37,7 @@ public class NPC : MonoBehaviour {
 	}
 
 	protected void Update(){
-		if (canshoot)
-			Shoot ();
-		else
-			Attack ();
+		Attack ();
 
 		//movement
 		Move();
@@ -60,8 +56,11 @@ public class NPC : MonoBehaviour {
 			if (collider.gameObject.CompareTag ("Player")) {
 				damage = healthBar.health; //kill self if hit player, player takes damage equal to current health
 				EnemyController.Instance.EnemyKilled (gameObject); //remove enemy from screen
-				if (PlayerController.Instance.health > 0)
+				if (PlayerController.Instance.health > 0) {
 					PlayerController.Instance.EnemyKilled (); //add score if player isn't dead
+					LevelController.Instance.EnemyKilled();
+					PickupController.Instance.NewPickup (transform.position);
+				}
 			} else {
 				damage = collider.gameObject.GetComponent<BasicProjectile> ().Damage;
 				projectiles.Remove (collider.gameObject); //remove from list
@@ -72,9 +71,9 @@ public class NPC : MonoBehaviour {
 					LevelController.Instance.EnemyKilled ();
 					EnemyController.Instance.EnemyKilled (gameObject);
 					PlayerController.Instance.EnemyKilled ();
+					PickupController.Instance.NewPickup (transform.position);
 				}
 			}
-
 		}
 	}
 

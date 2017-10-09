@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelController : MonoBehaviour {
 
 	public static LevelController Instance = null;
-
 	void Awake(){
 		if (Instance == null) Instance = this;
 		else if (Instance != this) Destroy(gameObject);

@@ -3,18 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum States{
-	Idle, Attack, Hit, Die, Move
-}
-
-public enum Directions{
-	Unspecified, S, SW, W, NW, N, NE, E, SE
-}
-
-public enum EnemyTypes{
-	basic, fast
-}
-
 [System.Serializable]
 public class Boundary{
 	public float xMin, xMax, zMin, zMax;
@@ -22,8 +10,13 @@ public class Boundary{
 
 public class GameController : MonoBehaviour {
 
+	public static GameController Instance = null;	
+	void Awake(){
+		if (Instance == null) Instance = this;
+		else if (Instance != this) Destroy(gameObject);
 
-	public static GameController Instance = null;
+		DontDestroyOnLoad(gameObject);
+	}
 
 	public Boundary boundary;
 	public Text scoreText;
@@ -41,14 +34,6 @@ public class GameController : MonoBehaviour {
 	private LevelController levelController;
 	private PlayerController playerController;
 
-
-	void Awake(){
-		if (Instance == null) Instance = this;
-		else if (Instance != this) Destroy(gameObject);
-
-		DontDestroyOnLoad(gameObject);
-	}
-
 	// Use this for initialization
 	void Start () {
 		pickupController = PickupController.Instance;
@@ -64,16 +49,11 @@ public class GameController : MonoBehaviour {
 
 	void UpdateText(){
 		scoreText.text = "Score: " + playerController.score;
-		timeBetweenShotsText.text = "Time Between Shots: " + playerController.timeBetweenShots;
+		timeBetweenShotsText.text = (playerController.CurrentWeapon != null)? "Time Between Shots: " + playerController.CurrentWeapon.GetComponent<Weapon>().timeBetweenShots : " ";
 		timeBetweenEnemySpawnText.text = "Time Between Enemy Spawns: " + enemyController.EnemySpawnTime;
 		EnemiesLeftText.text = "Enemies Left: " + levelController.enemiesToKill;
 		LevelText.text = "Level: " + level + "-" + sublevel;
 		PlayerHealthText.text = "Health: " + playerController.health;
-	}
-
-	void ClearRoom(){
-		enemyController.Clear ();
-		pickupController.Clear ();
 	}
 
 	void Reset(){
@@ -89,7 +69,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void LevelEnd(){
-		ClearRoom ();
+		//clear room once go through doors
+		enemyController.Clear ();
+		pickupController.Clear ();
 	}
 
 

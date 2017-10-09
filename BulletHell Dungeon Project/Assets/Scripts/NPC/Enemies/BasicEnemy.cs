@@ -22,7 +22,7 @@ public class BasicEnemy : NPC {
 
 	protected override void FireProjectile(){
 		animator.ChangeState (States.Attack, direction);
-		GameObject newProjectile = Instantiate (projectile, transform.position, transform.rotation);
+		GameObject newProjectile = Instantiate (projectile, transform.position, Quaternion.identity);
 		BasicProjectile newProjectileScript = newProjectile.GetComponent<BasicProjectile> ();
 		newProjectileScript.owner = BasicProjectile.Owner.Enemy;
 		Vector3 dir = PlayerController.Instance.transform.position - transform.position;
@@ -41,8 +41,6 @@ public class BasicEnemy : NPC {
 					CalculateDirection (dir);
 					//perform movement
 					moveVelocity = dir * movespeed * Time.deltaTime;
-
-
 				} else {
 					moveVelocity = Vector3.zero;
 					state = States.Idle;
@@ -58,7 +56,7 @@ public class BasicEnemy : NPC {
 		}
 	}
 
-	protected override void Shoot(){
+	protected override void Attack(){
 		ProjectileTimer ();
 	}
 

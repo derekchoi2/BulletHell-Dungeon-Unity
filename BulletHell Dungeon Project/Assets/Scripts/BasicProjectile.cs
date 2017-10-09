@@ -21,4 +21,8 @@ public class BasicProjectile : MonoBehaviour {
 	void Update () {
 		transform.position += projVelocity;
 	}
+
+	void OnCollisionEnter(Collision collision){
+		Debug.Log ("COLLISION");
+	}
 }
