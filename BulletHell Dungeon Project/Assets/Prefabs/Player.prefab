@@ -432,6 +432,7 @@ MonoBehaviour:
   CurrentWeapon: {fileID: 0}
   WeaponSpawnOrigin: {fileID: 1984470493847988}
   speed: 20
+  speedPenaltyMultiplier: 0.5
   score: 0
   state: 0
   direction: 0

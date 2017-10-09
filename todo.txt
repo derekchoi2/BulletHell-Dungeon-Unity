@@ -12,7 +12,5 @@ boss sublevel at the end of level
 - laser "projectile" prefab
 
 - Weapons System
-	- Animate weapon
 	- Prefab for trident weapon pickup
 		- shoots 3 projectiles
-		

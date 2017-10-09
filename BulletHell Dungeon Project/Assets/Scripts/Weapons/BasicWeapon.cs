@@ -8,17 +8,17 @@ public class BasicWeapon : Weapon {
 
 	public override void Shoot(Vector3 shootVec){
 		if (player == null)
-			player = PlayerController.Instance;
+			GetPlayer ();
 
 		shotTimer = shotTimer + Time.deltaTime;
 
 		if (shotTimer > nextShot) {
 			if (player.state == States.Attack)
-				player.ChangeState (States.Idle, Vector3.zero);
+				player.ChangeState (States.Idle, player.direction);
 
 			if (shootVec.sqrMagnitude != 0) {
 				nextShot = shotTimer + timeBetweenShots;
-				FireProjectile (player.transform.position, shootVec, projectile);
+				FireProjectile (shootVec, projectile);
 				nextShot = nextShot - shotTimer;
 				shotTimer = 0.0F;
 			}

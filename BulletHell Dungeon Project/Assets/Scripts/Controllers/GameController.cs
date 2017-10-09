@@ -56,11 +56,6 @@ public class GameController : MonoBehaviour {
 		PlayerHealthText.text = "Health: " + playerController.health;
 	}
 
-	void ClearRoom(){
-		enemyController.Clear ();
-		pickupController.Clear ();
-	}
-
 	void Reset(){
 		pickupController.Clear ();
 		enemyController.Reset ();
@@ -74,7 +69,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void LevelEnd(){
-		ClearRoom ();
+		//clear room once go through doors
+		enemyController.Clear ();
+		pickupController.Clear ();
 	}
 
 

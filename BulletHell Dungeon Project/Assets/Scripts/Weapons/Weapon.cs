@@ -10,7 +10,6 @@ public abstract class Weapon : MonoBehaviour {
 
 	protected List<GameObject> projectiles = new List<GameObject>();
 
-	protected float Direction;
 	protected SpriteAnimator animator;
 	protected float nextShot;
 	protected float shotTimer = 0f;
@@ -26,17 +25,31 @@ public abstract class Weapon : MonoBehaviour {
 
 	public abstract void Shoot (Vector3 shootVec);
 
-	protected void FireProjectile(Vector3 Origin, Vector3 shootVec, GameObject projectile){
-		GameObject projectileInstance = Instantiate (projectile, transform.position, transform.rotation);
+	protected void GetPlayer(){
+		player = PlayerController.Instance;
+	}
+
+	protected void FireProjectile(Vector3 shootVec, GameObject projectile){
+		//spawn under player sprite
+		Vector3 spawnVec = transform.position;
+		spawnVec.y -= 1;
+
+		GameObject projectileInstance = Instantiate (projectile, spawnVec, transform.rotation);
 		BasicProjectile projectileScript = projectileInstance.GetComponent<BasicProjectile> ();
 		projectileScript.owner = BasicProjectile.Owner.Player;
 
-		Vector3 dir = shootVec.normalized;
-
-		player.ChangeState(States.Attack, dir);
-		projectileScript.SetVelocity (dir * ProjectileSpeed * Time.fixedDeltaTime);
+		player.ChangeState(States.Attack, shootVec);
+		projectileScript.SetVelocity (shootVec * ProjectileSpeed * Time.fixedDeltaTime);
 
 		projectiles.Add (projectileInstance);
+	}
+
+	public void ChangeState(States state, Directions playerDir, Directions dir){
+		if (player == null)
+			GetPlayer ();
+		
+		if (player.MoveShootSame (playerDir, dir) || state == States.Idle)
+			animator.ChangeState (state, dir);
 	}
 
 	public void Hide(){
