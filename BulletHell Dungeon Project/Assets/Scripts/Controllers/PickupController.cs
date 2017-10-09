@@ -56,10 +56,11 @@ public class PickupController : MonoBehaviour {
 		//random enum value according to drop chaces
 
 		//remove current weapon from list temporarily so it doesn't drop as a pickup
+		//exclude items with 0 relative rarity
 		List<Pickup> temp = new List<Pickup>();
 		int weight = 0;
 		foreach (Pickup p in Pickups) {
-			if (p.type != PlayerController.Instance.CurrentWeapon.GetComponent<Weapon> ().PickupType) {
+			if (p.RelativeRarity > 0 && p.type != PlayerController.Instance.CurrentWeapon.GetComponent<Weapon> ().PickupType) {
 				temp.Add (p);
 				weight += p.RelativeRarity;
 			}
