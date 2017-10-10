@@ -28,7 +28,7 @@ public class PickupController : MonoBehaviour {
 	private List<GameObject> spawnedTexts = new List<GameObject>();
 	private List<GameObject> spawnedPickups = new List<GameObject>();
 
-
+	private int activeSentryPickups = 0;
 
 	public void Clear(){
 		StopAllCoroutines ();
@@ -36,6 +36,11 @@ public class PickupController : MonoBehaviour {
 			Destroy (p);
 		foreach (GameObject text in spawnedTexts)
 			Destroy (text);
+
+		spawnedPickups.Clear ();
+		spawnedTexts.Clear ();
+
+		activeSentryPickups = 0;
 	}
 
 	public void NewPickup(Vector3 position){
@@ -45,7 +50,11 @@ public class PickupController : MonoBehaviour {
 		}
 	}
 
-	public void ShowPickupText(Vector3 position, string text){
+	public void ShowPickupText(GameObject pickup, PickupTypes type, Vector3 position, string text){
+		if (type == PickupTypes.sentry)
+			activeSentryPickups--;
+		spawnedPickups.Remove (pickup);
+		Destroy (pickup);
 		GameObject newPickupText = Instantiate (PickupTextPrefab, position, Quaternion.Euler (new Vector3 (90, 0, 0)));
 		newPickupText.GetComponent<TextMesh> ().text = text;
 		spawnedTexts.Add (newPickupText);
@@ -61,20 +70,37 @@ public class PickupController : MonoBehaviour {
 		int weight = 0;
 		foreach (Pickup p in Pickups) {
 			if (p.RelativeRarity > 0 && p.type != PlayerController.Instance.CurrentWeapon.GetComponent<Weapon> ().PickupType) {
-				temp.Add (p);
-				weight += p.RelativeRarity;
+
+				if (p.type != PickupTypes.sentry || (p.type == PickupTypes.sentry && DropSentry ())) {
+					//add if not a sentry. If it is a sentry check that it can drop
+					temp.Add (p);
+					weight += p.RelativeRarity;
+				}
+
 			}
 		}
 		
 		int rand = Random.Range (0, weight);
 		foreach (Pickup p in temp) {
-			if (rand <= p.RelativeRarity)
+			if (rand <= p.RelativeRarity) {
+				if (p.type == PickupTypes.sentry)
+					activeSentryPickups++;
 				return p.type;
+			}
 			rand -= p.RelativeRarity;
 		}
 
 		//this should never happen. prevents compiler errors
 		return (PickupTypes) 0;
+	}
+
+	bool DropSentry(){
+		int activeSentries = PlayerController.Instance.SentryCount ();
+
+		if (activeSentries + activeSentryPickups < PlayerController.Instance.maxSentries)
+			return true;
+		return false;
+
 	}
 
 	IEnumerator PickupTextTimer(){

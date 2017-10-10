@@ -8,6 +8,7 @@ public abstract class Weapon : MonoBehaviour {
 	public PickupTypes PickupType;
 	public float ProjectileSpeed = 40f;
 	public float timeBetweenShots = 0.5f;
+	public float minTimeBetweenShots = 0.2f;
 	public bool shootDelaying = false;
 
 	protected List<GameObject> projectiles = new List<GameObject>();
@@ -59,6 +60,10 @@ public abstract class Weapon : MonoBehaviour {
 	public void Reset(){
 		DestroyProjectiles ();
 		timeBetweenShots = savedTimeBetweenShots;
+	}
+
+	public void ChangeFireRate(float val){
+		timeBetweenShots = Mathf.Clamp (timeBetweenShots - val, minTimeBetweenShots, savedTimeBetweenShots);
 	}
 
 	void OnDestroy(){

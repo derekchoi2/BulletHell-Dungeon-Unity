@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  value: -0.02
+  value: 0.02
   displayText: Firerate Up
   SpawnPrefab: {fileID: 0}
 --- !u!212 &212806685736302738

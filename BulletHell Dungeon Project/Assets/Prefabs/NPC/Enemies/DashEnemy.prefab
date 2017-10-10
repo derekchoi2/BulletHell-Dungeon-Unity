@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60277051b15fa4950ba4d7dcf7037d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movespeed: 2
+  movespeed: 5
   projectile: {fileID: 0}
   timeBetweenShots: 1
   projectileSpeed: 20

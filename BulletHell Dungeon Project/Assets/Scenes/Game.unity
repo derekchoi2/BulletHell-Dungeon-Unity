@@ -871,11 +871,11 @@ MonoBehaviour:
   - type: 0
     PickupPrefab: {fileID: 1603336551710584, guid: f7a474555751c5946be8cd3b5006c21c,
       type: 2}
-    RelativeRarity: 50
+    RelativeRarity: 20
   - type: 1
     PickupPrefab: {fileID: 1603336551710584, guid: f75e804860747ac429e32a9605e6bfd1,
       type: 2}
-    RelativeRarity: 30
+    RelativeRarity: 5
   - type: 2
     PickupPrefab: {fileID: 1943747160434380, guid: ad8324f8d66c4914593d3b0e8b901b5c,
       type: 2}

@@ -1,5 +1,5 @@
 ﻿public enum States{
-	Idle, Attack, Hit, Die, Move
+	Idle, Attack, Hit, Die, Move, MoveAttack
 }
 
 public enum Directions{

@@ -81,14 +81,17 @@ public class SpriteAnimator : MonoBehaviour {
 	}
 
 	public void ChangeState(States state, Directions dir){
-		currentIndex = FindIndex (state, dir);
-		if (sprites [currentIndex].flip)
-			spriteRenderer.flipX = true;
-		else
-			spriteRenderer.flipX = false;
-		currentSprite = 0;
-		currentTime = 0;
-		UpdateSprite ();
+		int newIndex = FindIndex (state, dir);
+		if (currentIndex != newIndex) {
+			currentIndex = FindIndex (state, dir);
+			if (sprites [currentIndex].flip)
+				spriteRenderer.flipX = true;
+			else
+				spriteRenderer.flipX = false;
+			currentSprite = 0;
+			currentTime = 0;
+			UpdateSprite ();
+		}
 
 		//Debug.Log ("STATE CHANGE: " + state.ToString ());
 	}

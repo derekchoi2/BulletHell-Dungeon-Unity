@@ -4,29 +4,26 @@ using UnityEngine;
 
 public class Idle : State {
 
-	private SpriteAnimator animator;
-
 	public Idle(){
 		state = States.Idle;
-		direction = Directions.Unspecified;
 	}
 
-	public override void Enter(Directions dir){
+	public override void Enter(Directions moveDir, Directions weaponDir){
 		if (player == null)
 			player = PlayerController.Instance;
 		
 		animator = player.GetComponentInChildren<SpriteAnimator> ();
-		animator.ChangeState (States.Idle, direction);
 	}
 
 	public override void Exit(){
 
 	}
 
-	public override void Execute(Directions newDirection){
-		animator.ChangeState (States.Idle, direction);
+	public override void Execute(Directions moveDir, Directions weaponDir){
+		animator.ChangeState (state, moveDir);
+
 		if (player.CurrentWeaponScript != null)
-			player.CurrentWeaponScript.ChangeState (States.Idle, direction);
+			player.CurrentWeaponScript.ChangeState (state, moveDir);
 	}
 
 }

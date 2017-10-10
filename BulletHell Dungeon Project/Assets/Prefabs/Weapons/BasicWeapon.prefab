@@ -57,6 +57,8 @@ MonoBehaviour:
   PickupType: 2
   ProjectileSpeed: 40
   timeBetweenShots: 0.5
+  minTimeBetweenShots: 0.2
+  shootDelaying: 0
   projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
 --- !u!114 &114860716415710382
 MonoBehaviour:

@@ -5,14 +5,13 @@ using UnityEngine;
 
 public abstract class State {
 
-	public abstract void Enter (Directions dir);
+	public abstract void Enter (Directions moveDir, Directions weaponDir);
 	public abstract void Exit();
-	public abstract void Execute(Directions dir);
+	public abstract void Execute(Directions moveDir, Directions weaponDir);
 
 	public States state;
 	protected PlayerController player;
-	protected Directions direction;
-	protected Directions weaponDir;
+	protected SpriteAnimator animator;
 
 	public List<Transition> Transitions = new List<Transition>();
 

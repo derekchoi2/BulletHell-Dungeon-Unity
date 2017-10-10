@@ -7,11 +7,12 @@ public class FSM {
 	private List<State> states = new List<State>();
 	public State CurrentState;
 	public States StateString;
-	private Directions CurrentDirection;
+	private Directions moveDirection;
+	private Directions weaponDirection;
 
-	public void Init(State initState, Directions initDir){
+	public void Init(State initState, Directions moveDir, Directions weaponDir){
 		CurrentState = states.Find (s => s.state == initState.state);
-		CurrentState.Enter (initDir);
+		CurrentState.Enter (moveDir, weaponDir);
 	}
 
 	public void Update(){
@@ -24,19 +25,21 @@ public class FSM {
 			if (t.Condition ()) {
 				CurrentState.Exit ();
 				CurrentState = t.NextState;
-				CurrentState.Enter (CurrentDirection);
+				CurrentState.Enter (moveDirection, weaponDirection);
+				//Debug.Log ("FSM State: " + CurrentState.state.ToString ());
 			}
 		}
 
-		CurrentState.Execute (CurrentDirection);
+		CurrentState.Execute (moveDirection, weaponDirection);
 	}
 
 	public void AddState(State state){
 		states.Add (state);
 	}
 
-	public void UpdateDirection(Directions dir){
-		CurrentDirection = dir;
+	public void UpdateDirection(Directions moveDir, Directions shootDir){
+		moveDirection = moveDir;
+		weaponDirection = shootDir;
 	}
 
 }

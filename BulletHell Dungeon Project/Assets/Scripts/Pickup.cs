@@ -13,8 +13,7 @@ public class Pickup : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.CompareTag("Player")){
 			//collide with player
-			PickupController.Instance.ShowPickupText(transform.position, displayText);
-			Destroy (gameObject);
+			PickupController.Instance.ShowPickupText(gameObject, type, transform.position, displayText);
 		}
 	}
 }

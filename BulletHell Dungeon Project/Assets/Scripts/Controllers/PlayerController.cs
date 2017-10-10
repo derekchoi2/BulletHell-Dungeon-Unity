@@ -45,10 +45,13 @@ public class PlayerController : MonoBehaviour {
 	private Idle idle;
 	private Move move;
 	private Attack attack;
+	private MoveAttack moveAttack;
 
 	private Rigidbody rb;
 
+	public int maxSentries;
 	private List<GameObject> sentries = new List<GameObject> ();
+	public int SentryCount() { return sentries.Count; }
 
 	#if UNITY_IOS || UNITY_ANDROID
 	private bool enableJoysticks = true;
@@ -70,19 +73,37 @@ public class PlayerController : MonoBehaviour {
 		idle = new Idle ();
 		move = new Move ();
 		attack = new Attack ();
+		moveAttack = new MoveAttack ();
+
+		//idle:			moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude == 0
+		//move:			moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0
+		//attack:		moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude != 0
+		//moveattack:	moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude != 0
 
 		idle.AddTransition (new Transition (move, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0));
-		idle.AddTransition (new Transition (attack, () => shootVec.sqrMagnitude != 0));
+		idle.AddTransition (new Transition (attack, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude != 0));
+		idle.AddTransition (new Transition (moveAttack, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude != 0));
+
+		move.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude == 0));
+		move.AddTransition (new Transition (attack, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude != 0));
+		move.AddTransition (new Transition (moveAttack, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude != 0));
+
+		//attack not moving
 		attack.AddTransition (new Transition (move, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
 		attack.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
-		move.AddTransition (new Transition (attack, () => shootVec.sqrMagnitude != 0));
-		move.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0));
+		attack.AddTransition (new Transition (moveAttack, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude != 0));
+
+		//attack while moving
+		moveAttack.AddTransition (new Transition (move, () => moveVec.sqrMagnitude != 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
+		moveAttack.AddTransition (new Transition (idle, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude == 0 && !CurrentWeaponScript.shootDelaying));
+		moveAttack.AddTransition (new Transition (attack, () => moveVec.sqrMagnitude == 0 && shootVec.sqrMagnitude != 0));
+
 
 		fsm.AddState (idle);
 		fsm.AddState (move);
 		fsm.AddState (attack);
 
-		fsm.Init (idle, Directions.Unspecified);
+		fsm.Init (idle, Directions.Unspecified, Directions.Unspecified);
 	}
 
 	// Update is called once per frame
@@ -94,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 			GetInputVectors (); //gets normalised input into moveVec and shootVec
 
 			fsm.Update ();
-			fsm.UpdateDirection (CalculateDirection (moveVec));
+			fsm.UpdateDirection (CalculateDirection (moveVec), CalculateDirection(shootVec));
 
 			if (state != States.Idle)
 				Move ();
@@ -125,7 +146,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Move(){
 		if (state == States.Attack && !SameDir(CalculateDirection(moveVec), CalculateDirection(shootVec)))
-			rb.velocity = moveVec * speed * speedPenaltyMultiplier;
+			rb.velocity = moveVec * speed * (1 - speedPenaltyMultiplier);
 		else
 			rb.velocity = moveVec * speed;
 
@@ -226,7 +247,7 @@ public class PlayerController : MonoBehaviour {
 	void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
 		case PickupTypes.firerateUp:
-			CurrentWeaponScript.timeBetweenShots += pickup.value;
+			CurrentWeaponScript.ChangeFireRate(pickup.value);
 			break;
 		case PickupTypes.sentry:
 			sentries.Add(Instantiate(pickup.SpawnPrefab, transform.position, Quaternion.identity));
@@ -253,35 +274,35 @@ public class PlayerController : MonoBehaviour {
 	bool SameDir(Directions move, Directions shoot){
 		switch (move) {
 		case Directions.N:
-			if (shoot == Directions.NE || shoot == Directions.N || shoot == Directions.NW)
+			if (shoot == Directions.W || shoot == Directions.NW || shoot == Directions.N || shoot == Directions.NE || shoot == Directions.E)
 				return true;
 			break;
 		case Directions.NE:
-			if (shoot == Directions.N || shoot == Directions.NE || shoot == Directions.E)
+			if (shoot == Directions.NW || shoot == Directions.N || shoot == Directions.NE || shoot == Directions.E || shoot == Directions.SE)
 				return true;
 			break;
 		case Directions.E:
-			if (shoot == Directions.NE || shoot == Directions.E || shoot == Directions.SE)
+			if (shoot == Directions.N || shoot == Directions.NE || shoot == Directions.E || shoot == Directions.SE || shoot == Directions.S)
 				return true;
 			break;
 		case Directions.SE:
-			if (shoot == Directions.E || shoot == Directions.SE || shoot == Directions.S)
+			if (shoot == Directions.NE || shoot == Directions.E || shoot == Directions.SE || shoot == Directions.S || shoot == Directions.SW)
 				return true;
 			break;
 		case Directions.S:
-			if (shoot == Directions.SW || shoot == Directions.S || shoot == Directions.SE)
+			if (shoot == Directions.E || shoot == Directions.SE || shoot == Directions.S || shoot == Directions.SW || shoot == Directions.W)
 				return true;
 			break;
 		case Directions.SW:
-			if (shoot == Directions.S || shoot == Directions.SW || shoot == Directions.W)
+			if (shoot == Directions.SE || shoot == Directions.S || shoot == Directions.SW || shoot == Directions.W || shoot == Directions.NW)
 				return true;
 			break;
 		case Directions.W:
-			if (shoot == Directions.SW || shoot == Directions.W || shoot == Directions.NW)
+			if (shoot == Directions.S || shoot == Directions.SW || shoot == Directions.W || shoot == Directions.NW || shoot == Directions.N)
 				return true;
 			break;
 		case Directions.NW:
-			if (shoot == Directions.N || shoot == Directions.NW || shoot == Directions.W)
+			if (shoot == Directions.SW || shoot == Directions.W || shoot == Directions.NW || shoot == Directions.N || shoot == Directions.NE)
 				return true;
 			break;
 		}
