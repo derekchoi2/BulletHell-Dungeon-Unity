@@ -23,18 +23,13 @@ public class Sentry: NPC {
 		gc = GameController.Instance;
 	}
 
-	protected override void FireProjectile(){
-		if (PlayerController.Instance != null && EnemyController.Instance.GetEnemies().Count > 0) {
+	protected override void Shoot(){
+		if (PlayerController.Instance != null && EnemyController.Instance.GetEnemies ().Count > 0) {
 
-			GameObject newProjectile = Instantiate (projectile, transform.position, transform.rotation);
-			BasicProjectile newProjectileScript = newProjectile.GetComponent<BasicProjectile> ();
-			newProjectileScript.owner = BasicProjectile.Owner.Player;
-			Vector3 dir = NearestEnemyPos () - transform.position;
-			newProjectileScript.SetVelocity (dir.normalized * projectileSpeed * Time.fixedDeltaTime);
-			projectiles.Add (newProjectile);
-
+			Vector3 shootVec = NearestEnemyPos () - transform.position;
+			CalculateDirection (shootVec);
+			FireProjectile (BasicProjectile.Owner.Player, shootVec);
 			state = States.Attack;
-			CalculateDirection (dir);
 			animator.ChangeState (state, direction);
 			attacking = true;
 		}

@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour {
 	public Text PlayerHealthText;
 	public int level = 1;
 	public int sublevel = 1;
+	public int sublevelMax = 3;
 
 	//controller singletons
 	private PickupController pickupController;
@@ -77,7 +78,7 @@ public class GameController : MonoBehaviour {
 
 	public void LevelUp(){
 		sublevel++;
-		if (sublevel > 3) {
+		if (sublevel > sublevelMax) {
 			sublevel = 1;
 			level++;
 		}

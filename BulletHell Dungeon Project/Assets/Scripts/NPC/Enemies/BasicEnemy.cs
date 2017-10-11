@@ -19,16 +19,12 @@ public class BasicEnemy : NPC {
 		StartCoroutine (UpdateVelocityTimer ());
 		transform.position = GameController.Instance.RandomPosition();
 	}
+		
+	protected override void Shoot(){
+		Vector3 shootVec = PlayerController.Instance.transform.position - transform.position;
+		FireProjectile (BasicProjectile.Owner.Enemy, shootVec);
 
-	protected override void FireProjectile(){
 		animator.ChangeState (States.Attack, direction);
-		GameObject newProjectile = Instantiate (projectile, transform.position, Quaternion.identity);
-		BasicProjectile newProjectileScript = newProjectile.GetComponent<BasicProjectile> ();
-		newProjectileScript.owner = BasicProjectile.Owner.Enemy;
-		Vector3 dir = PlayerController.Instance.transform.position - transform.position;
-		newProjectileScript.SetVelocity (dir.normalized * projectileSpeed * Time.fixedDeltaTime);
-
-		projectiles.Add (newProjectile);
 	}
 
 	protected override void Move(){

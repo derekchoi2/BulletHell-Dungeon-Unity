@@ -53,11 +53,10 @@ public class DashEnemy : NPC {
 
 	protected void CalculateDirection(Vector3 dir){
 		float x = dir.x;
-		if (x < 0) { //left
+		if (x < 0) //left
 			direction = Directions.W;
-		} else { //right/default
+		else //right/default
 			direction = Directions.E;
-		}
 
 	}
 

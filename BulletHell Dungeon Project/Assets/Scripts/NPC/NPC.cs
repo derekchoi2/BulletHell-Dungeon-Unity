@@ -8,7 +8,6 @@ public abstract class NPC : MonoBehaviour {
 	public GameObject projectile;
 	public float timeBetweenShots = 1f;
 	public float projectileSpeed = 20f;
-	public bool canshoot;
 	public HealthBar healthBar;
 
 	protected States state;
@@ -20,9 +19,9 @@ public abstract class NPC : MonoBehaviour {
 	protected Vector3 moveVelocity = Vector3.zero;
 	protected bool changeVelocity = true; //enemies start moving when they spawn
 
-	protected virtual void FireProjectile (){}
 	protected virtual void Move (){}
 	protected virtual void Attack (){}
+	protected virtual void Shoot () {}
 
 	private bool colliding = false;
 
@@ -32,10 +31,19 @@ public abstract class NPC : MonoBehaviour {
 		if (shotTimer > nextShot && PlayerController.Instance != null)
 		{
 			nextShot = shotTimer + timeBetweenShots;
-			FireProjectile ();
+			Shoot ();
 			nextShot = nextShot - shotTimer;
 			shotTimer = 0.0F;
 		}
+	}
+
+	protected void FireProjectile(BasicProjectile.Owner owner, Vector3 shootVec){
+		GameObject newProjectile = Instantiate (projectile, transform.position, Quaternion.identity);
+		BasicProjectile newProjectileScript = newProjectile.GetComponent<BasicProjectile> ();
+		newProjectileScript.owner = owner;
+		newProjectileScript.SetVelocity (shootVec.normalized * projectileSpeed * Time.fixedDeltaTime);
+
+		projectiles.Add (newProjectile);
 	}
 
 	protected void Update(){
