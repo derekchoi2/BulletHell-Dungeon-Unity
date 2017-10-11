@@ -62,6 +62,10 @@ public class LevelController : MonoBehaviour {
 		enemiesSpawned++;
 	}
 
+	public void BossSpawned(){
+		enemiesToKill = 1;
+	}
+
 	void LevelStart(){
 		playerController.Show ();
 		enemyController.LevelStart (level);

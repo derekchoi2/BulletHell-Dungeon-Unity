@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour {
 	public static EnemyController Instance = null;
 
 	public List<GameObject> EnemyPrefabs;
+	public List<GameObject> BossPrefabs;
 	public float EnemySpawnTime = 3f;
 	public float EnemySpawnDecay = 0.1f;
 	public float EnemySpawnTimeMin = 0.5f;
@@ -42,10 +43,12 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	public void LevelStart(int level){
-		enemiesPerSpawn = level;
-		EnemySpawnTime = SavedEnemySpawnTime;
-		spawn = true;
-		StartCoroutine (EnemySpawnTimer ());
+		if (!SpawnBoss ()) {
+			enemiesPerSpawn = level;
+			EnemySpawnTime = SavedEnemySpawnTime;
+			spawn = true;
+			StartCoroutine (EnemySpawnTimer ());
+		}
 	}
 
 	public void LevelEnd(){
@@ -87,6 +90,22 @@ public class EnemyController : MonoBehaviour {
 			EnemySpawnTime = EnemySpawnTimeMin;
 		LevelController.Instance.EnemySpawned ();
 	}
+
+	bool SpawnBoss(){
+		if (GameController.Instance.sublevel == GameController.Instance.sublevelMax) {
+			//random boss
+			int index = Random.Range(0, BossPrefabs.Count);
+			//Debug.Log ("Boss Index: " + index);
+
+			enemies.Add(Instantiate(BossPrefabs[index]));
+
+			LevelController.Instance.BossSpawned ();
+
+			return true;
+		}
+		return false;
+	}
+
 
 	public void Reset(){
 		StopAllCoroutines ();

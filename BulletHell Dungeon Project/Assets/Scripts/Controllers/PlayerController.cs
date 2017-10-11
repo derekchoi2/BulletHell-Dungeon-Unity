@@ -115,7 +115,11 @@ public class PlayerController : MonoBehaviour {
 			GetInputVectors (); //gets normalised input into moveVec and shootVec
 
 			fsm.Update ();
-			fsm.UpdateDirection (CalculateDirection (moveVec), CalculateDirection(shootVec));
+			Directions shootDir = CalculateDirection (shootVec);
+			Directions moveDir = CalculateDirection (moveVec);
+			fsm.UpdateDirection (moveDir, shootDir);
+
+			UpdateWeaponZIndex (moveDir, shootDir);
 
 			if (state != States.Idle)
 				Move ();
@@ -126,6 +130,41 @@ public class PlayerController : MonoBehaviour {
 			if (sentries.Count > 0)
 				SpreadSentries ();
 		}
+	}
+
+	void UpdateWeaponZIndex(Directions moveDir, Directions shootDir){
+		bool under = true;
+		Vector3 temp = WeaponSpawnOrigin.transform.position;
+
+		switch (fsm.CurrentState.state) {
+		case States.Move:
+			if (moveDir == Directions.S || moveDir == Directions.Unspecified)
+				under = false;
+			else
+				under = true;
+			break;
+		case States.MoveAttack:
+			if (shootDir == Directions.S || shootDir == Directions.Unspecified)
+				under = false;
+			else
+				under = true;
+			break;
+		case States.Idle:
+		case States.Attack:
+			under = false;
+			break;
+		default:
+			under = true; //default spawn weapon under player
+			break;
+		}
+
+		if (under)
+			temp.y = transform.position.y - 0.1f;
+		else
+			temp.y = transform.position.y + 0.1f;
+
+		WeaponSpawnOrigin.transform.position = temp;
+
 	}
 
 	void GetInputVectors(){
@@ -220,7 +259,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void EnemyKilled(){
-		score += ((gc.level - 1) * 3) + gc.sublevel;
+		score += ((gc.level - 1) * gc.sublevelMax) + gc.sublevel;
 	}
 
 	public void PlayerDoorCollide(Vector3 position){

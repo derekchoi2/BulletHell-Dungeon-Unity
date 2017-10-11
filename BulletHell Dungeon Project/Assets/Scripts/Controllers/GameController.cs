@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour {
 	public Text PlayerHealthText;
 	public int level = 1;
 	public int sublevel = 1;
+	public int sublevelMax = 3;
 
 	//controller singletons
 	private PickupController pickupController;
@@ -77,7 +78,7 @@ public class GameController : MonoBehaviour {
 
 	public void LevelUp(){
 		sublevel++;
-		if (sublevel > 3) {
+		if (sublevel > sublevelMax) {
 			sublevel = 1;
 			level++;
 		}
@@ -91,7 +92,7 @@ public class GameController : MonoBehaviour {
 		while (!found) {
 			pos = new Vector3 (Random.Range (boundary.xMin, boundary.xMax), 1, Random.Range (boundary.zMin, boundary.zMax));
 			if (playerController != null) {
-				if (Vector3.Distance (pos, PlayerController.Instance.transform.position) > 10)
+				if (Vector3.Distance (pos, PlayerController.Instance.transform.position) > 20)
 					found = true;
 			} else 
 				found = true;
