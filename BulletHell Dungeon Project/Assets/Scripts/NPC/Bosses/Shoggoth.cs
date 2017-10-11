@@ -9,14 +9,11 @@ public class Shoggoth : NPC {
 	public float spread = 30f;
 	public int NumOfProjectiles = 12;
 
-	public float velocityChangeTime = 1f;
+	public float phaseChangeTime = 1f;
 
-
-	public float timeBetweenDashes = 0.5f;
 	public float dashSpeedMultiplier = 10f;
-	private float dashTimer = 0;
-	private float nextDash;
 
+	private bool phaseChange = false;
 	private int attackPhase = 0;
 	private int shots = 0;
 	private int dashes = 0;
@@ -31,112 +28,104 @@ public class Shoggoth : NPC {
 		nextShot = timeBetweenShots;
 		gc = GameController.Instance;
 		transform.position = GameController.Instance.RandomPosition();
+
+		StartCoroutine (PhaseChangeTimer ());
 	}
 
 	protected override void Shoot(){
 		animator.ChangeState (States.Idle, direction); //Idle animation is same as attack animation
 		Vector3 shootVec = PlayerController.Instance.transform.position - transform.position;
-		for (int i = 0; i < NumOfProjectiles; i++) {
+		for (int i = 0; i < NumOfProjectiles; i++)
 			FireProjectile (BasicProjectile.Owner.Enemy, Quaternion.Euler (0, i * spread, 0) * shootVec);
-		}
-
 	}
 
 	protected override void Move(){
-		if (PlayerController.Instance != null) {
-			//movement
-			if (changeVelocity && attackPhase % 2 == 0) { //attack phase not dashing, so move won't overwrite dash
-				Vector3 dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-				state = States.Move;
-				CalculateDirection (dir);
-				//perform movement
-				moveVelocity = dir * movespeed * Time.deltaTime;
-
-				animator.ChangeState (state, direction);
-
-				StopAllCoroutines ();
-				StartCoroutine (VelocityChangeTimer ());
-
-				changeVelocity = false;
-			}
-			transform.position += moveVelocity;
-		}
+		transform.position += moveVelocity;
 	}
 
 	protected override void Attack(){
-		//attack pattern? dashx3 -> shootx2 -> dashx3 -> shootx2
+		//attack pattern? move -> dash -> shoot -> dash
+		if (PlayerController.Instance != null){
 
-		if (attackPhase % 2 == 0) { //even attackPhase
-			ProjectileTimer ();
-			shots++;
-			if (shots > shotLimit) {
-				shots = 0;
-				attackPhase++;
+			if (attackPhase % 4 == 0) { //move
+				if (phaseChange) {
+					state = States.Move;
+					phaseChange = false;
+					UpdateVelocity (1);
+					StopAllCoroutines ();
+					StartCoroutine (PhaseChangeTimer ());
+
+					attackPhase++;
+				}
+
+			} else if (attackPhase % 4 == 1 || attackPhase % 4 == 3) { // dash
+				if (phaseChange) {
+					dashes++;
+					phaseChange = false;
+					if (dashes > dashLimit) {
+						attackPhase++;
+						dashes = 0;
+					} else {
+						UpdateVelocity (dashSpeedMultiplier);
+						state = States.Attack;
+					}
+					StopAllCoroutines ();
+					StartCoroutine (PhaseChangeTimer ());
+				}
+			} else if (attackPhase % 4 == 2) { //shoot
+				if (phaseChange) {
+					shots++;
+					phaseChange = false;
+					if (shots > shotLimit) {
+						attackPhase++;
+						shots = 0;
+					} else {
+						UpdateVelocity(0); //don't move
+						Shoot ();
+						state = States.Idle;
+					}
+					StopAllCoroutines ();
+					StartCoroutine (PhaseChangeTimer ());
+				}
 			}
-		} else {
-			DashTimer ();
-			dashes++;
-			if (dashes > dashLimit) {
-				dashes = 0;
-				attackPhase++;
-			}
+
+			animator.ChangeState (state, direction);
 		}
 	}
 
-	void DashTimer(){
-		dashTimer += Time.deltaTime;
+	bool MoveTimer(){
+			shotTimer = shotTimer + Time.deltaTime;
 
-		if (dashTimer > nextDash && PlayerController.Instance != null)
-		{
-			nextDash = dashTimer + timeBetweenDashes;
-			Dash ();
-			nextDash -= dashTimer;
-			dashTimer = 0.0F;
-		}
+			if (shotTimer > nextShot && PlayerController.Instance != null)
+			{
+				nextShot = shotTimer + timeBetweenShots;
+				Shoot ();
+				nextShot = nextShot - shotTimer;
+				shotTimer = 0.0F;
+				return true;
+			}
+			return false;
 	}
 
-	void Dash(){
+	void UpdateVelocity(float multiplier){
 		Vector3 dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-		state = States.Attack;
 		CalculateDirection (dir);
-		//perform movement
-		moveVelocity = dir * movespeed * Time.deltaTime * dashSpeedMultiplier;
 
-		animator.ChangeState (state, direction);
+		moveVelocity = dir * movespeed * Time.deltaTime * multiplier;
 	}
 
 	protected void CalculateDirection(Vector3 dir){
-		float x = dir.x;
-		float z = dir.z;
-
-		if (x < 0) { //left
-			if (z < 0.5 && z > -0.5) {
-				direction = Directions.W;
-			} else if (z >= 0.5) {
-				direction = Directions.NW;
-			} else if (z <= -0.5) {
-				direction = Directions.SW;
-			}
-		} else if (x > 0) { //right
-			if (z < 0.5 && z > -0.5) {
-				direction = Directions.E;
-			} else if (z >= 0.5) {
-				direction = Directions.NE;
-			} else if (z <= -0.5) {
-				direction = Directions.SE;
-			}
-		} else if (z > 0) { //up
-			direction = Directions.N;
-		} else if (z < 0) { //down
-			direction = Directions.S;
-		} else {
+		if (dir.x < 0) //left
+			direction = Directions.W;
+		else if (dir.x > 0) //right
+			direction = Directions.E;
+		else
 			direction = Directions.Unspecified;
-		}
 	}
 
-	IEnumerator VelocityChangeTimer(){
-		yield return new WaitForSeconds (velocityChangeTime);
-		changeVelocity = true;
+	IEnumerator PhaseChangeTimer(){
+		yield return new WaitForSeconds (phaseChangeTime);
+		phaseChange = true;
 	}
 
 }

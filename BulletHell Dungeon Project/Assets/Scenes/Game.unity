@@ -824,6 +824,7 @@ MonoBehaviour:
   PlayerHealthText: {fileID: 272144204}
   level: 1
   sublevel: 1
+  sublevelMax: 3
 --- !u!4 &601343087
 Transform:
   m_ObjectHideFlags: 0
@@ -851,6 +852,8 @@ MonoBehaviour:
   EnemyPrefabs:
   - {fileID: 1445742917308226, guid: 156bab1b4dc3346c3946e456c8b699ab, type: 2}
   - {fileID: 1915610087648388, guid: b8cbb32746c60497ab6de85baf29cebf, type: 2}
+  BossPrefabs:
+  - {fileID: 1445742917308226, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
   EnemySpawnTime: 3
   EnemySpawnDecay: 0.1
   EnemySpawnTimeMin: 0.5
@@ -1754,58 +1757,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1280515555}
---- !u!1001 &1428718326
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -11.82
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363551661892960, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 114991854148163772, guid: 62c9b88b003e74c97b9d1532986d1dfe,
-        type: 2}
-      propertyPath: canshoot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114991854148163772, guid: 62c9b88b003e74c97b9d1532986d1dfe,
-        type: 2}
-      propertyPath: timeBetweenShots
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1697198453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,7 +1980,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 23155715771820180, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &2008345077

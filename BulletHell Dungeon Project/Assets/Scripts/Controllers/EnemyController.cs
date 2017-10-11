@@ -43,11 +43,12 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	public void LevelStart(int level){
-		enemiesPerSpawn = level;
-		EnemySpawnTime = SavedEnemySpawnTime;
-		spawn = true;
-		StartCoroutine (EnemySpawnTimer ());
-		SpawnBoss ();
+		if (!SpawnBoss ()) {
+			enemiesPerSpawn = level;
+			EnemySpawnTime = SavedEnemySpawnTime;
+			spawn = true;
+			StartCoroutine (EnemySpawnTimer ());
+		}
 	}
 
 	public void LevelEnd(){
@@ -90,10 +91,19 @@ public class EnemyController : MonoBehaviour {
 		LevelController.Instance.EnemySpawned ();
 	}
 
-	void SpawnBoss(){
+	bool SpawnBoss(){
 		if (GameController.Instance.sublevel == GameController.Instance.sublevelMax) {
-			//spawn boss
+			//random boss
+			int index = Random.Range(0, BossPrefabs.Count);
+			//Debug.Log ("Boss Index: " + index);
+
+			enemies.Add(Instantiate(BossPrefabs[index]));
+
+			LevelController.Instance.BossSpawned ();
+
+			return true;
 		}
+		return false;
 	}
 
 

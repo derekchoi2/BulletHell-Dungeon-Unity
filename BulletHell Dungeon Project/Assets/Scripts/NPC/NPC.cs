@@ -25,7 +25,7 @@ public abstract class NPC : MonoBehaviour {
 
 	private bool colliding = false;
 
-	protected void ProjectileTimer(){
+	protected bool ProjectileTimer(){
 		shotTimer = shotTimer + Time.deltaTime;
 
 		if (shotTimer > nextShot && PlayerController.Instance != null)
@@ -34,7 +34,9 @@ public abstract class NPC : MonoBehaviour {
 			Shoot ();
 			nextShot = nextShot - shotTimer;
 			shotTimer = 0.0F;
+			return true;
 		}
+		return false;
 	}
 
 	protected void FireProjectile(BasicProjectile.Owner owner, Vector3 shootVec){

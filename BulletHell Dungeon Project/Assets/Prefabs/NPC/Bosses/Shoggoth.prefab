@@ -399,14 +399,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345536cee58cc4da7bf2ed7f7a1bfc42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movespeed: 5
+  movespeed: 8
   projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
   timeBetweenShots: 1
   projectileSpeed: 20
-  canshoot: 0
   healthBar: {fileID: 114898049148836588}
-  directionChangeTime: 2
-  stationaryTime: 1
+  shotLimit: 8
+  dashLimit: 1
+  spread: 30
+  NumOfProjectiles: 12
+  phaseChangeTime: 0.5
+  dashSpeedMultiplier: 3
 --- !u!212 &212120721155457142
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -7,6 +7,8 @@ public class DashEnemy : NPC {
 	public float moveTime;
 	public float attackTime;
 
+	public float dashSpeedMultiplier = 10f;
+
 	private SpriteAnimator animator;
 
 	// Use this for initialization
@@ -33,7 +35,7 @@ public class DashEnemy : NPC {
 
 				if (state == States.Attack)
 					//dash towards player
-					moveVelocity = dir * movespeed * Time.deltaTime * 10;
+					moveVelocity = dir * movespeed * Time.deltaTime * dashSpeedMultiplier;
 				else
 					//maintain velocity, slower
 					moveVelocity = dir * movespeed * Time.deltaTime;

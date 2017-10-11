@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour {
 		while (!found) {
 			pos = new Vector3 (Random.Range (boundary.xMin, boundary.xMax), 1, Random.Range (boundary.zMin, boundary.zMax));
 			if (playerController != null) {
-				if (Vector3.Distance (pos, PlayerController.Instance.transform.position) > 10)
+				if (Vector3.Distance (pos, PlayerController.Instance.transform.position) > 20)
 					found = true;
 			} else 
 				found = true;
