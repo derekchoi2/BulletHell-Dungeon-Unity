@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114860716415710382}
   - component: {fileID: 114057718151872024}
   m_Layer: 0
-  m_Name: BasicWeapon
+  m_Name: SMGWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,13 +53,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad454509be5c8b41a532350f671e518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
-  PickupType: 2
-  ProjectileSpeed: 50
-  timeBetweenShots: 0.5
-  minTimeBetweenShots: 0.2
+  Type: 2
+  PickupType: 4
+  ProjectileSpeed: 100
+  timeBetweenShots: 0.05
+  minTimeBetweenShots: 0.05
   shootDelaying: 0
-  projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
+  projectile: {fileID: 1011218834262436, guid: cd92ca2a064cf4449b13f91e79368f6c, type: 2}
 --- !u!114 &114860716415710382
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -223,7 +223,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8927b641c1d0a9a4dae66837c4693a4a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

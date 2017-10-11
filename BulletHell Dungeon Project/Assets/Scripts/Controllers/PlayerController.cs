@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour {
 
 	private GameController gc;
 
-	public int health = 3;
-	private int maxHealth;
+	public float health = 3;
+	private float maxHealth;
 
 	public GameObject BaseWeapon;
 	[HideInInspector] public GameObject CurrentWeapon;
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void PlayerHit(GameObject collider){
-		int damage;
+		float damage;
 		//damage according to current enemy health or damage value of projectile depending on type
 		if (collider.CompareTag ("Enemy")) {
 			damage = collider.GetComponentInChildren<HealthBar> ().health;
@@ -296,6 +296,12 @@ public class PlayerController : MonoBehaviour {
 			break;
 		case PickupTypes.tridentWeapon:
 			SwapWeapon (WeaponsList.Instance.GetWeaponOfType (WeaponTypes.triple));
+			break;
+		case PickupTypes.SMGWeapon:
+			SwapWeapon (WeaponsList.Instance.GetWeaponOfType (WeaponTypes.smg));
+			break;
+		default:
+			Debug.Log ("Pickup not found");
 			break;
 		}
 	}

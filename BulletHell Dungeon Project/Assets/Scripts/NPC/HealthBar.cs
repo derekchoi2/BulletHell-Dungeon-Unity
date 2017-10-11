@@ -7,14 +7,14 @@ public class HealthBar : MonoBehaviour {
 
 	public Transform currentValTransform;
 
-	private int MaxHealth;
-	public int health;
+	private float MaxHealth;
+	public float health;
 
 	void Start(){
 		MaxHealth = health;
 	}
 
-	public void ChangeHealth(int val){
+	public void ChangeHealth(float val){
 		health = Mathf.Clamp (health + val, 0, MaxHealth);
 	}
 

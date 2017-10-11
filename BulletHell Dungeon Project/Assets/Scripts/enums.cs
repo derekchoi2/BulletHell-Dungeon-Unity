@@ -11,9 +11,9 @@ public enum EnemyTypes{
 }
 
 public enum PickupTypes{
-	firerateUp, sentry, basicWeapon, tridentWeapon
+	firerateUp, sentry, basicWeapon, tridentWeapon, SMGWeapon
 }
 
 public enum WeaponTypes{
-	basic, triple
+	basic, triple, smg
 }

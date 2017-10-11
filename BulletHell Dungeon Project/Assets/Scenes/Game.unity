@@ -887,6 +887,10 @@ MonoBehaviour:
     PickupPrefab: {fileID: 1023371573025672, guid: 65bfa1cd8970b2443aa466818a440f75,
       type: 2}
     RelativeRarity: 10
+  - type: 4
+    PickupPrefab: {fileID: 1943747160434380, guid: ca0eac70b4f24474a95b556c830f5e14,
+      type: 2}
+    RelativeRarity: 30
   PickupTextPrefab: {fileID: 1072134938325682, guid: 93130f2257fdf7b408fb9f35b62185e7,
     type: 2}
   PickupTextDespawnTime: 1
@@ -925,6 +929,7 @@ MonoBehaviour:
   Weapons:
   - {fileID: 1218061480363192, guid: cc92ccbb01096a34cbbf43467fdb960e, type: 2}
   - {fileID: 1724967250257640, guid: 780b76ed598ad984ba9b303079b3937f, type: 2}
+  - {fileID: 1218061480363192, guid: 2224f5e0a7c095040b0b5ad78b112e67, type: 2}
 --- !u!1 &602380049
 GameObject:
   m_ObjectHideFlags: 0

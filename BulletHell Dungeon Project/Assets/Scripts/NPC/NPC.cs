@@ -70,7 +70,7 @@ public abstract class NPC : MonoBehaviour {
 			//player projectile or player collide with Enemy
 			if (!colliding) { //prevent multiple collisions per frame
 				colliding = true;
-				int damage;
+				float damage;
 				if (collider.gameObject.CompareTag ("Player")) {
 					damage = healthBar.health; //kill self if hit player, player takes damage equal to current health
 					EnemyController.Instance.EnemyKilled (gameObject); //remove enemy from screen

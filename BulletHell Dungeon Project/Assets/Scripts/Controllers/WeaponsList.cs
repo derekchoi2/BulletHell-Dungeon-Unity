@@ -15,9 +15,10 @@ public class WeaponsList : MonoBehaviour {
 	public List<GameObject> Weapons = new List<GameObject>();
 
 	public GameObject GetWeaponOfType(WeaponTypes type){
-		foreach (GameObject weapon in Weapons)
+		foreach (GameObject weapon in Weapons) {
 			if (weapon.GetComponent<Weapon> ().Type == type)
 				return weapon;
+		}
 
 		//should never happen
 		return Weapons [0];

@@ -185,7 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   PickupType: 3
-  ProjectileSpeed: 40
+  ProjectileSpeed: 50
   timeBetweenShots: 0.5
   minTimeBetweenShots: 0.2
   shootDelaying: 0
