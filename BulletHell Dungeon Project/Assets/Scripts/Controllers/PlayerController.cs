@@ -225,6 +225,14 @@ public class PlayerController : MonoBehaviour {
 			Destroy (collider);
 		}
 
+		SubHealth (damage);
+	}
+
+	public void PlayerLaserHit(float damage){
+		SubHealth (damage);
+	}
+
+	void SubHealth(float damage){
 		health = Mathf.Clamp (health - damage, 0, maxHealth);
 
 		if (health <= 0) {

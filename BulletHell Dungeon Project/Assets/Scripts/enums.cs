@@ -7,7 +7,7 @@ public enum Directions{
 }
 
 public enum EnemyTypes{
-	basic, fast
+	basic, fast, staticlaser
 }
 
 public enum PickupTypes{

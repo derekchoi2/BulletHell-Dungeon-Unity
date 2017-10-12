@@ -81,7 +81,8 @@ public abstract class NPC : MonoBehaviour {
 					}
 				} else {
 					damage = collider.gameObject.GetComponent<BasicProjectile> ().Damage;
-					projectiles.Remove (collider.gameObject); //remove from list
+					//if (projectiles != null)
+						//projectiles.Remove (collider.gameObject); //remove from list
 					Destroy (collider.gameObject); //destroy projectile
 					healthBar.ChangeHealth (-damage);
 					healthBar.UpdateHealthBar ();
@@ -97,10 +98,11 @@ public abstract class NPC : MonoBehaviour {
 	}
 
 	public void ClearProjectiles(){
-		foreach (GameObject projectile in projectiles) {
-			Destroy (projectile);
+		if (projectiles != null) {
+			foreach (GameObject projectile in projectiles)
+				Destroy (projectile);
+			projectiles.Clear ();
 		}
-		projectiles.Clear ();
 	}
 
 

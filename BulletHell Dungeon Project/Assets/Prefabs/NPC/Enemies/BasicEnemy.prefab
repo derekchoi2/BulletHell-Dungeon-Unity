@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 33223965197449266}
   - component: {fileID: 65062079167849820}
   - component: {fileID: 114651838583469854}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BasicEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1445742917308226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15, y: 1, z: -11.82}
+  m_LocalPosition: {x: 24.748259, y: 5.575849e-18, z: -13.811264}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4593858142134594}
@@ -318,8 +318,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.2, y: 5, z: 3.26}
-  m_Center: {x: -0.08, y: 0, z: -2.97}
+  m_Size: {x: 1.73, y: 5, z: 2.41}
+  m_Center: {x: -0.08, y: 0, z: -1.9}
 --- !u!114 &114464449639499508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -457,7 +457,6 @@ MonoBehaviour:
   projectile: {fileID: 1011218834262436, guid: c7668ec77970134438dcee89686117dc, type: 2}
   timeBetweenShots: 1.5
   projectileSpeed: 20
-  canshoot: 1
   healthBar: {fileID: 114898049148836588}
   directionChangeTime: 2
   stationaryTime: 1

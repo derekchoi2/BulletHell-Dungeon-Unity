@@ -1,12 +1,4 @@
-boss sublevel at the end of level
-- list of bosses to add in inspector
-- create/animate boss prefab
+- hub area to start
+	- option to return to hub after each boss
 
-- plant prefab
-	- laser/beam weapon
-	
-- hub area
-
-- laser gun pickup prefab
-- make player change weapon after picking up laser gun
-- laser "projectile" prefab
+- laser gun weapon, based off the laser enemy

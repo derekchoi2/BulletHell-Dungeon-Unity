@@ -852,6 +852,7 @@ MonoBehaviour:
   EnemyPrefabs:
   - {fileID: 1445742917308226, guid: 156bab1b4dc3346c3946e456c8b699ab, type: 2}
   - {fileID: 1915610087648388, guid: b8cbb32746c60497ab6de85baf29cebf, type: 2}
+  - {fileID: 1445742917308226, guid: 3731e460e0cafa74a99218efa7c70472, type: 2}
   BossPrefabs:
   - {fileID: 1445742917308226, guid: 62c9b88b003e74c97b9d1532986d1dfe, type: 2}
   EnemySpawnTime: 3
@@ -975,7 +976,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
@@ -989,7 +990,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 602380049}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1572,7 +1573,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1155626460}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 22, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1985,8 +1986,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 23155715771820180, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &2008345077
