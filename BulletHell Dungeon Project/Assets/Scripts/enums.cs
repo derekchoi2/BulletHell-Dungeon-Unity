@@ -17,3 +17,11 @@ public enum PickupTypes{
 public enum WeaponTypes{
 	basic, triple, smg
 }
+
+public enum DoorTypes{
+	nextLevel, hub
+}
+
+public enum DoorPosition{
+	N, E, S, W
+}

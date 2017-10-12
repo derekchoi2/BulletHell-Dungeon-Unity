@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour {
 
+	public DoorTypes type;
+	public DoorPosition position;
 	private BoxCollider boxCollider;
 	private MeshRenderer meshRenderer;
+	public List<Material> materials;
+	public bool show;
 
 	void Awake(){
 		boxCollider = gameObject.GetComponent<BoxCollider> ();
@@ -15,11 +19,21 @@ public class DoorController : MonoBehaviour {
 	public void Hide(){
 		boxCollider.enabled = false;
 		meshRenderer.enabled = false;
+		show = false;
 	}
 
 	public void Show(){
 		boxCollider.enabled = true;
 		meshRenderer.enabled = true;
+		show = true;
+	}
+
+	public void SetType(DoorTypes type){
+		this.type = type;
+		if (type == DoorTypes.hub)
+			meshRenderer.material = materials [1]; //white
+		else
+			meshRenderer.material = materials [0]; //black
 	}
 
 	void OnTriggerEnter(Collider collider){

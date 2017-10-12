@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 	public Text LevelText;
 	public Text PlayerHealthText;
 	public int level = 1;
-	public int sublevel = 1;
+	public int sublevel = 1; //start in hub, gets incremented when leave hub
 	public int sublevelMax = 3;
 
 	//controller singletons
@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour {
 		enemyController = EnemyController.Instance;
 		levelController = LevelController.Instance;
 		playerController = PlayerController.Instance;
-		levelController.NewLevel (level, sublevel);
+		levelController.NewLevel ((levelController.hub)? DoorTypes.hub : DoorTypes.nextLevel, level, sublevel);
 	}
 
 	void Update(){
@@ -53,8 +53,8 @@ public class GameController : MonoBehaviour {
 		timeBetweenShotsText.text = (playerController.CurrentWeapon != null)? "Time Between Shots: " + playerController.CurrentWeapon.GetComponent<Weapon>().timeBetweenShots : " ";
 		timeBetweenEnemySpawnText.text = "Time Between Enemy Spawns: " + enemyController.EnemySpawnTime;
 		EnemiesLeftText.text = "Enemies Left: " + levelController.enemiesToKill;
-		LevelText.text = "Level: " + level + "-" + sublevel;
 		PlayerHealthText.text = "Health: " + playerController.health;
+		LevelText.text = (levelController.hub)? "HUB" : "Level: " + level + "-" + sublevel;
 	}
 
 	void Reset(){
@@ -65,8 +65,8 @@ public class GameController : MonoBehaviour {
 	public void PlayerDie(){
 		Reset ();
 		level = 1;
-		sublevel = 1;
-		levelController.NewLevel (level, sublevel);
+		sublevel = 0;
+		levelController.NewLevel (DoorTypes.hub, level, sublevel);
 	}
 
 	public void LevelEnd(){
@@ -75,14 +75,15 @@ public class GameController : MonoBehaviour {
 		pickupController.Clear ();
 	}
 
-
-	public void LevelUp(){
-		sublevel++;
-		if (sublevel > sublevelMax) {
-			sublevel = 1;
-			level++;
+	public void LevelUp(DoorTypes type){
+		if (type != DoorTypes.hub){
+			sublevel++;
+			if (sublevel > sublevelMax) {
+				sublevel = 1;
+				level++;
+			}
 		}
-		levelController.NewLevel (level, sublevel);
+		levelController.NewLevel (type, level, sublevel);
 	}
 
 	public Vector3 RandomPosition(){

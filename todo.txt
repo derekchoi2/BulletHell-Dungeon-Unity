@@ -1,4 +1,1 @@
-- hub area to start
-	- option to return to hub after each boss
-
 - laser gun weapon, based off the laser enemy

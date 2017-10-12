@@ -18,9 +18,14 @@ public class LevelController : MonoBehaviour {
 	public int enemiesToKill;
 	public int enemiesSpawned;
 	public int levelMultiplier = 5;
+	public bool hub;
+	public GameObject HubScene;
+	private bool bossLevel;
+	private bool doorsShown;
 	public List<DoorController> Doors;
 
 	private int level = 1;
+	private int sublevel;
 	private int savedLevelMultiplier;
 	private GameController gameController;
 	private PickupController pickupController;
@@ -32,25 +37,39 @@ public class LevelController : MonoBehaviour {
 		pickupController = PickupController.Instance;
 		enemyController = EnemyController.Instance;
 		playerController = PlayerController.Instance;
-
-		HideDoors ();
 	}
 
 	public void Update(){
-		if (enemiesSpawned == totalEnemies) {
+		if (enemiesSpawned == totalEnemies)
 			enemyController.StopSpawning ();
-		}
-		if (enemiesToKill <= 0) {
+		if (enemiesToKill <= 0 && !hub && !doorsShown) {
 			ShowDoors ();
+			doorsShown = true;
 		}
 	}
 
-	public void NewLevel(int lvl, int sublevel){
-		level = lvl;
-		levelMultiplier = savedLevelMultiplier * level;
-		totalEnemies = sublevel * levelMultiplier;
-		enemiesToKill = totalEnemies;
-		enemiesSpawned = 0;
+	public void NewLevel(DoorTypes type, int lvl, int sublvl){
+		if (gameController == null)
+			Start ();
+
+		HideDoors ();
+		if (type == DoorTypes.hub) {
+			//go back to hub
+			bossLevel = false;
+			hub = true;
+			HubLevel ();
+			Debug.Log ("hub level");
+		} else {
+			hub = false;
+			HubScene.SetActive(false);
+			level = lvl;
+			sublevel = sublvl;
+			bossLevel = (sublevel == gameController.sublevelMax);
+			levelMultiplier = savedLevelMultiplier * level;
+			totalEnemies = sublevel * levelMultiplier;
+			enemiesToKill = totalEnemies;
+			enemiesSpawned = 0;
+		}
 		StartCoroutine (LevelStartTimer ());
 	}
 
@@ -72,21 +91,32 @@ public class LevelController : MonoBehaviour {
 	}
 
 	void LevelEnd(){
-		//open doors stop all spawning
+		//stop all spawning
 		enemyController.LevelEnd();
 		pickupController.Clear ();
 		gameController.LevelEnd ();
-		HideDoors ();
 	}
 
-	public void PlayerDoorCollide(){
-		gameController.LevelUp ();
+	public void PlayerDoorCollide(DoorTypes type){
+		gameController.LevelUp (type);
 		LevelEnd ();
 	}
 
 	void ShowDoors(){
-		foreach (DoorController door in Doors) {
-			door.Show ();
+		//hide all doors first
+		foreach (DoorController door in Doors)
+			door.Hide ();
+
+		int index = Random.Range (0, Doors.Count);
+
+		Doors [index].SetType (DoorTypes.nextLevel);
+		Doors [index].Show ();
+		if (bossLevel) {
+			int index2 = index;
+			while (index == index2)
+				index2 = Random.Range (0, Doors.Count);
+			Doors [index2].SetType (DoorTypes.hub);
+			Doors [index2].Show ();
 		}
 	}
 
@@ -94,11 +124,21 @@ public class LevelController : MonoBehaviour {
 		foreach (DoorController door in Doors) {
 			door.Hide ();
 		}
+		doorsShown = false;
+	}
+
+	void HubLevel(){
+		ShowDoors();
+
+		HubScene.SetActive (true);
 	}
 
 	IEnumerator LevelStartTimer() {
 		yield return new WaitForSeconds (levelTimer);
-		LevelStart ();
+		if (hub)
+			playerController.Show ();
+		else
+			LevelStart ();
 	}
 
 }

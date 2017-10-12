@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour {
 			if (collider.gameObject.CompareTag ("Door")) {
 				//collide with player
 				PlayerDoorCollide (transform.position);
-				LevelController.Instance.PlayerDoorCollide ();
+				LevelController.Instance.PlayerDoorCollide (collider.gameObject.GetComponent<DoorController>().type);
 			}
 
 			if (collider.gameObject.CompareTag ("Pickup")) {
