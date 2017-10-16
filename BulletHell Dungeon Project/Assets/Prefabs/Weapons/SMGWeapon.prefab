@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4290365645852076}
   - component: {fileID: 212058215508091410}
   - component: {fileID: 114860716415710382}
-  - component: {fileID: 114057718151872024}
+  - component: {fileID: 114389631915279612}
   m_Layer: 0
   m_Name: SMGWeapon
   m_TagString: Untagged
@@ -42,7 +42,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &114057718151872024
+--- !u!114 &114389631915279612
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1218061480363192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fad454509be5c8b41a532350f671e518, type: 3}
+  m_Script: {fileID: 11500000, guid: 14b6d7bef3eecd14d95b603830be184b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
@@ -60,6 +60,7 @@ MonoBehaviour:
   minTimeBetweenShots: 0.05
   shootDelaying: 0
   projectile: {fileID: 1011218834262436, guid: cd92ca2a064cf4449b13f91e79368f6c, type: 2}
+  maxSpreadDeg: 10
 --- !u!114 &114860716415710382
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -212,6 +212,18 @@ public class PlayerController : MonoBehaviour {
 				//player collide with enemy projectile OR enemy
 				PlayerHit(collider.gameObject);
 			}
+
+			if (collider.gameObject.CompareTag ("Bank")) {
+				gc.OpenBank ();
+			}
+		}
+	}
+
+	void OnTriggerExit(Collider collider){
+		if (!dead) {
+			if (collider.gameObject.CompareTag ("Bank")) {
+				gc.CloseBank ();
+			}
 		}
 	}
 
@@ -224,7 +236,6 @@ public class PlayerController : MonoBehaviour {
 			damage = collider.GetComponent<BasicProjectile> ().Damage;
 			Destroy (collider);
 		}
-
 		SubHealth (damage);
 	}
 
@@ -234,6 +245,9 @@ public class PlayerController : MonoBehaviour {
 
 	void SubHealth(float damage){
 		health = Mathf.Clamp (health - damage, 0, maxHealth);
+
+		StopAllCoroutines ();
+		StartCoroutine (FlashSprite(3, 0.1f));
 
 		if (health <= 0) {
 			DestroySentries ();
@@ -252,8 +266,11 @@ public class PlayerController : MonoBehaviour {
 
 	public void Hide(){
 		spriteRenderer.enabled = false;
-		if (CurrentWeaponScript != null)
+		if (CurrentWeaponScript != null) {
 			CurrentWeaponScript.Hide ();
+			CurrentWeaponScript.Reset ();
+		}
+		StopAllCoroutines ();
 		dead = true;
 	}
 
@@ -263,6 +280,7 @@ public class PlayerController : MonoBehaviour {
 			CurrentWeaponScript.Show ();
 		if (dead)
 			Reset ();
+		StopAllCoroutines ();
 		dead = false;
 	}
 
@@ -291,7 +309,7 @@ public class PlayerController : MonoBehaviour {
 			sentry.transform.position = rb.position;
 	}
 
-	void CollectPickup(Pickup pickup){
+	public void CollectPickup(Pickup pickup){
 		switch (pickup.type) {
 		case PickupTypes.firerateUp:
 			CurrentWeaponScript.ChangeFireRate(pickup.value);
@@ -421,5 +439,15 @@ public class PlayerController : MonoBehaviour {
 		}
 		//default
 		return Directions.Unspecified;
+	}
+
+	IEnumerator FlashSprite(int noOfFlashes, float flashTime){
+		for (int i = 0; i < 2 * noOfFlashes; i++) {
+			spriteRenderer.enabled = !spriteRenderer.enabled;
+			if (CurrentWeaponScript != null)
+				CurrentWeaponScript.Toggle ();
+			yield return new WaitForSeconds (flashTime);
+		}
+
 	}
 }

@@ -9,7 +9,7 @@ public abstract class Weapon : MonoBehaviour {
 	public float ProjectileSpeed = 40f;
 	public float timeBetweenShots = 0.5f;
 	public float minTimeBetweenShots = 0.2f;
-	public bool shootDelaying = false;
+	[HideInInspector]public bool shootDelaying = false;
 
 	protected List<GameObject> projectiles = new List<GameObject>();
 
@@ -49,12 +49,16 @@ public abstract class Weapon : MonoBehaviour {
 		animator.ChangeState (state, dir);
 	}
 
-	public void Hide(){
-		GetComponent<SpriteRenderer> ().enabled = false;
+	public void Toggle(){
+		GetComponent<SpriteRenderer> ().enabled = !GetComponent<SpriteRenderer> ().enabled;
 	}
 
 	public void Show(){
 		GetComponent<SpriteRenderer> ().enabled = true;
+	}
+
+	public void Hide(){
+		GetComponent<SpriteRenderer> ().enabled = false;
 	}
 
 	public void Reset(){
@@ -66,11 +70,7 @@ public abstract class Weapon : MonoBehaviour {
 		timeBetweenShots = Mathf.Clamp (timeBetweenShots - val, minTimeBetweenShots, savedTimeBetweenShots);
 	}
 
-	void OnDestroy(){
-		DestroyProjectiles ();
-	}
-
-	void DestroyProjectiles(){
+	public void DestroyProjectiles(){
 		foreach (GameObject projectile in projectiles) {
 			Destroy (projectile);
 		}

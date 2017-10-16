@@ -52,7 +52,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1472931354100078}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.37, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 4971158490935472}
@@ -89,8 +89,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.83, y: 1, z: 5.88}
-  m_Center: {x: 0, y: 0, z: -0.08}
+  m_Size: {x: 5.06, y: 1, z: 5.24}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114735173659875408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,6 +106,8 @@ MonoBehaviour:
   value: 1
   displayText: Trident Weapon
   SpawnPrefab: {fileID: 0}
+  weapon: 1
+  RelativeRarity: 10
 --- !u!212 &212616472318595816
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -138,7 +140,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b7e74aa33ce77cd40bf103eee2154cba, type: 3}
+  m_Sprite: {fileID: 21300006, guid: d5afb30d79844024ca4d561dee42d54d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

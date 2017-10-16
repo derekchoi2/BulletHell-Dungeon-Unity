@@ -107,6 +107,8 @@ MonoBehaviour:
   displayText: Sentry Acquired!
   SpawnPrefab: {fileID: 1915610087648388, guid: e8081d4aef272d144b98f54c34aa0a8e,
     type: 2}
+  weapon: 0
+  RelativeRarity: 5
 --- !u!212 &212809392435736150
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -139,7 +141,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3c85235f1afa60e478047f3e67867270, type: 3}
+  m_Sprite: {fileID: 21300002, guid: d5afb30d79844024ca4d561dee42d54d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

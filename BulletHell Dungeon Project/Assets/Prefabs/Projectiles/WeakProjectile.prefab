@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: 0
-  Damage: 0.1
+  Damage: 0.2
 --- !u!135 &135823967133415724
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -12,13 +12,6 @@ public class PickupController : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 	}
 
-	[System.Serializable]
-	public class Pickup{
-		public PickupTypes type;
-		public GameObject PickupPrefab;
-		[Range(0f,100f)]public int RelativeRarity;
-	}
-
 	[Range(0f, 100f)]public int DropChance;
 
 	public List<Pickup> Pickups;
@@ -46,7 +39,7 @@ public class PickupController : MonoBehaviour {
 	public void NewPickup(Vector3 position){
 		if (Random.Range (0, 100) <= DropChance) {
 			//see if enemy drops an item according to DropChance
-			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].PickupPrefab, position, Quaternion.identity));
+			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].SpawnPrefab, position, Quaternion.identity));
 		}
 	}
 

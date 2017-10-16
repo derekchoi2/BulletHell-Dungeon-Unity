@@ -29,6 +29,8 @@ public class GameController : MonoBehaviour {
 	public int sublevel = 1; //start in hub, gets incremented when leave hub
 	public int sublevelMax = 3;
 
+	public GameObject BankUI;
+
 	//controller singletons
 	private PickupController pickupController;
 	private EnemyController enemyController;
@@ -42,6 +44,8 @@ public class GameController : MonoBehaviour {
 		levelController = LevelController.Instance;
 		playerController = PlayerController.Instance;
 		levelController.NewLevel ((levelController.hub)? DoorTypes.hub : DoorTypes.nextLevel, level, sublevel);
+
+		CloseBank ();
 	}
 
 	void Update(){
@@ -84,6 +88,15 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		levelController.NewLevel (type, level, sublevel);
+	}
+
+	public void OpenBank(){
+		BankUI.SetActive(true);
+		BankUI.GetComponentInChildren<InventoryManagement> ().Show ();
+	}
+
+	public void CloseBank(){
+		BankUI.SetActive(false);
 	}
 
 	public Vector3 RandomPosition(){

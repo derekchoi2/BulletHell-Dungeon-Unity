@@ -12,7 +12,7 @@ TagManager:
   - Pickup
   - PickupText
   - Friendly
-  - Undefined
+  - Bank
   layers:
   - Default
   - TransparentFX
