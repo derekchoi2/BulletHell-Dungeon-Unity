@@ -247,6 +247,7 @@ public class PlayerController : MonoBehaviour {
 		health = Mathf.Clamp (health - damage, 0, maxHealth);
 
 		StopAllCoroutines ();
+		spriteRenderer.enabled = true;
 		StartCoroutine (FlashSprite(3, 0.1f));
 
 		if (health <= 0) {

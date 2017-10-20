@@ -39,7 +39,7 @@ public class PickupController : MonoBehaviour {
 	public void NewPickup(Vector3 position){
 		if (Random.Range (0, 100) <= DropChance) {
 			//see if enemy drops an item according to DropChance
-			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].SpawnPrefab, position, Quaternion.identity));
+			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].gameObject, position, Quaternion.identity));
 		}
 	}
 
