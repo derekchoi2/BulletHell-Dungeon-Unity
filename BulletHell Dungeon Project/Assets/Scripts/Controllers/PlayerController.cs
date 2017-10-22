@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+//using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour {
 
 		DontDestroyOnLoad(gameObject);
 	}
+
+	//public TouchPad leftJoystick;
+	//public TouchPad rightJoystick;
 
 	public InnerJoystick leftJoystick;
 	public InnerJoystick rightJoystick;
@@ -25,12 +28,12 @@ public class PlayerController : MonoBehaviour {
 	private float maxHealth;
 
 	public GameObject BaseWeapon;
-	[HideInInspector] public GameObject CurrentWeapon;
+	public GameObject CurrentWeapon;
 	public Weapon CurrentWeaponScript;
 	public GameObject WeaponSpawnOrigin;
 
 	public float speed = 20f;
-	public float speedPenaltyMultiplier = 0.5f;
+	public float speedPenaltyMultiplier = 0.1f;
 	public float score = 0f;
 	private bool dead = true;
 
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody rb;
 
-	public int maxSentries;
+	public int maxSentries = 3;
 	private List<GameObject> sentries = new List<GameObject> ();
 	public int SentryCount() { return sentries.Count; }
 
@@ -179,6 +182,7 @@ public class PlayerController : MonoBehaviour {
 			moveVec.x = leftStickVec.x;
 			moveVec.z = leftStickVec.y;
 		}
+		//Debug.Log(leftJoystick.m_JoystickOutput.x + " " + leftJoystick.m_JoystickOutput.y + " " + leftJoystick.m_JoystickOutput.z);
 		shootVec = shootVec.normalized;
 		moveVec = moveVec.normalized;
 	}
@@ -417,7 +421,7 @@ public class PlayerController : MonoBehaviour {
 		float x = vec.x;
 		float z = vec.z;
 
-		if (x < 0) { //left
+		if (x < -0.3) { //left
 			if (z < 0.3 && z > -0.3) {
 				return Directions.W;
 			} else if (z >= 0.3) {
@@ -425,7 +429,7 @@ public class PlayerController : MonoBehaviour {
 			} else if (z <= -0.3) {
 				return Directions.SW;
 			}
-		} else if (x > 0) { //right
+		} else if (x > 0.3) { //right
 			if (z < 0.3 && z > -0.3) {
 				return Directions.E;
 			} else if (z >= 0.3) {

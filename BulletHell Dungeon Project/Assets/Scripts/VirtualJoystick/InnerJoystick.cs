@@ -109,7 +109,7 @@ public class InnerJoystick : MonoBehaviour
 			PlayerController.Instance.rightStickVec = Vector3.zero;
 	}
 
-	public Vector3 GetDiscrete(){
+	public Vector3 GetDiscrete(){//vector3 vec
 		float x = 0;//vec.x;
 		float y = 0;//vec.y;
 
@@ -129,7 +129,7 @@ public class InnerJoystick : MonoBehaviour
 		else
 			y = 0;
 
-		//Debug.Log ("Discrete: " + x + " " + y);
+		Debug.Log ("Discrete: " + x + " " + y);
 		return new Vector3 (x, 0, y);
 	}
 	

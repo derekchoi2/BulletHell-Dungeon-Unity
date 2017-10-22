@@ -268,6 +268,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114742069964942846, guid: 800e42079789a9c4092549ba39800781,
+        type: 2}
+      propertyPath: other
+      value: 
+      objectReference: {fileID: 2124264616}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 800e42079789a9c4092549ba39800781, type: 2}
   m_IsPrefabParent: 0
@@ -609,6 +614,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 353876541}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &393377513 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114361762631267038, guid: 7ea108d52faf40641805e999db29a587,
+    type: 2}
+  m_PrefabInternal: {fileID: 1021180966}
+  m_Script: {fileID: 11500000, guid: 903368a2c91311c44babfa809c81f205, type: 3}
 --- !u!1 &442457242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,6 +1208,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &787333276 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114781345978376386, guid: 800e42079789a9c4092549ba39800781,
+    type: 2}
+  m_PrefabInternal: {fileID: 53393126}
+  m_Script: {fileID: 11500000, guid: 903368a2c91311c44babfa809c81f205, type: 3}
 --- !u!1 &838879644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,16 +1516,6 @@ Prefab:
     - target: {fileID: 224887843306951000, guid: 7ea108d52faf40641805e999db29a587,
         type: 2}
       propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114177880613468560, guid: 7ea108d52faf40641805e999db29a587,
-        type: 2}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114697275871544928, guid: 7ea108d52faf40641805e999db29a587,
-        type: 2}
-      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2542,10 +2549,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114860224288121366, guid: d99c62cd393976741b5cf4624bf864db,
         type: 2}
-      propertyPath: BaseWeapon
+      propertyPath: leftJoystick
       value: 
-      objectReference: {fileID: 1218061480363192, guid: 2224f5e0a7c095040b0b5ad78b112e67,
+      objectReference: {fileID: 393377513}
+    - target: {fileID: 114860224288121366, guid: d99c62cd393976741b5cf4624bf864db,
         type: 2}
+      propertyPath: rightJoystick
+      value: 
+      objectReference: {fileID: 787333276}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d99c62cd393976741b5cf4624bf864db, type: 2}
   m_IsPrefabParent: 0
@@ -2816,6 +2827,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2025872976}
+--- !u!114 &2124264616 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114437458481832634, guid: 7ea108d52faf40641805e999db29a587,
+    type: 2}
+  m_PrefabInternal: {fileID: 1021180966}
+  m_Script: {fileID: 11500000, guid: c9dd7c134d0b25c45a8a8d3798f19b8a, type: 3}
 --- !u!1 &2138113195
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,10 +21,10 @@ public class Attack : State {
 	}
 
 	public override void Execute(Directions moveDir, Directions weaponDir){
-		//no animation while attacking and not moving
-		animator.ChangeState (state, moveDir);
+		Debug.Log(weaponDir.ToString());
+		animator.ChangeState (state, weaponDir);
 		if (player.CurrentWeaponScript != null)
-			player.CurrentWeaponScript.ChangeState (state, moveDir); //no animation while attacking and not moving
+			player.CurrentWeaponScript.ChangeState (state, weaponDir);
 
 	}
 }
