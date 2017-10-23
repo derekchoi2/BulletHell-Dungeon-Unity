@@ -107,7 +107,7 @@ MonoBehaviour:
   displayText: Firerate Up
   SpawnPrefab: {fileID: 0}
   weapon: 0
-  RelativeRarity: 50
+  RelativeRarity: 40
 --- !u!212 &212806685736302738
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour {
 
 	public States state;
 	private SpriteRenderer spriteRenderer;
+	private MeshRenderer shadow;
 	private Vector3 startPos = new Vector3(0,1,0);
 
 	Vector3 moveVec = Vector3.zero;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer> ();
+		shadow = gameObject.GetComponentInChildren<MeshRenderer>();
 		gc = GameController.Instance;
 		rb = GetComponent<Rigidbody> ();
 		maxHealth = health;
@@ -255,6 +257,7 @@ public class PlayerController : MonoBehaviour {
 
 	public void Hide(){
 		spriteRenderer.enabled = false;
+		shadow.enabled = false;
 		if (CurrentWeaponScript != null) {
 			CurrentWeaponScript.Hide ();
 			CurrentWeaponScript.Reset ();
@@ -265,6 +268,7 @@ public class PlayerController : MonoBehaviour {
 
 	public void Show(){
 		spriteRenderer.enabled = true;
+		shadow.enabled = true;
 		if (CurrentWeaponScript != null)
 			CurrentWeaponScript.Show ();
 		if (dead)
