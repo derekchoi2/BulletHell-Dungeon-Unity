@@ -21,7 +21,6 @@ public class Attack : State {
 	}
 
 	public override void Execute(Directions moveDir, Directions weaponDir){
-		Debug.Log(weaponDir.ToString());
 		animator.ChangeState (state, weaponDir);
 		if (player.CurrentWeaponScript != null)
 			player.CurrentWeaponScript.ChangeState (state, weaponDir);

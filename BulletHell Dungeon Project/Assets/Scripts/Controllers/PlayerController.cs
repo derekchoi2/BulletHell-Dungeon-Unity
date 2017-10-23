@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityStandardAssets.CrossPlatformInput;
+using CnControls;
 
 public class PlayerController : MonoBehaviour {
 
@@ -12,15 +12,6 @@ public class PlayerController : MonoBehaviour {
 
 		DontDestroyOnLoad(gameObject);
 	}
-
-	//public TouchPad leftJoystick;
-	//public TouchPad rightJoystick;
-
-	public InnerJoystick leftJoystick;
-	public InnerJoystick rightJoystick;
-
-	public Vector3 leftStickVec { get; set; }
-	public Vector3 rightStickVec { get; set; }
 
 	private GameController gc;
 
@@ -55,12 +46,6 @@ public class PlayerController : MonoBehaviour {
 	public int maxSentries = 3;
 	private List<GameObject> sentries = new List<GameObject> ();
 	public int SentryCount() { return sentries.Count; }
-
-	#if UNITY_IOS || UNITY_ANDROID
-	private bool enableJoysticks = true;
-	#else
-	private bool enableJoysticks = false;
-	#endif
 
 	// Use this for initialization
 	void Start () {
@@ -171,18 +156,17 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void GetInputVectors(){
-		if (!enableJoysticks) {
-			shootVec.x = Input.GetAxisRaw ("ShootHorizontal");
-			shootVec.z = Input.GetAxisRaw ("ShootVertical");
-			moveVec.x = Input.GetAxisRaw ("Horizontal");
-			moveVec.z = Input.GetAxisRaw ("Vertical");
-		} else {
-			shootVec.x = rightStickVec.x;
-			shootVec.z = rightStickVec.y;
-			moveVec.x = leftStickVec.x;
-			moveVec.z = leftStickVec.y;
-		}
-		//Debug.Log(leftJoystick.m_JoystickOutput.x + " " + leftJoystick.m_JoystickOutput.y + " " + leftJoystick.m_JoystickOutput.z);
+#if UNITY_ANDROID || UNITY_IOS
+		shootVec.x = CnInputManager.GetAxis("ShootHorizontal");
+		shootVec.z = CnInputManager.GetAxis("ShootVertical");
+		moveVec.x = CnInputManager.GetAxis("Horizontal");
+		moveVec.z = CnInputManager.GetAxis("Vertical");
+#else
+		shootVec.x = Input.GetAxisRaw("ShootHorizontal");
+		shootVec.z = Input.GetAxisRaw("ShootVertical");
+		moveVec.x = Input.GetAxisRaw("Horizontal");
+		moveVec.z = Input.GetAxisRaw("Vertical");
+#endif
 		shootVec = shootVec.normalized;
 		moveVec = moveVec.normalized;
 	}

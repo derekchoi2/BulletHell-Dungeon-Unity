@@ -16,12 +16,6 @@ public class InnerJoystick : MonoBehaviour
 
 	private int touchIndex = -1;
 
-	#if UNITY_IOS || UNITY_ANDROID
-	private bool enableJoysticks = true;
-	#else
-	private bool enableJoysticks = false;
-	#endif
-
 	void Start(){
 		img = transform.GetChild (0).GetComponent<Image> ();
 		joystickBg = GetComponent<Image> ();
@@ -29,7 +23,6 @@ public class InnerJoystick : MonoBehaviour
 	}
 
 	void Update(){
-		if (enableJoysticks) {
 			for (int i = 0; i < Input.touchCount; i++) {
 
 				if ((left && Input.GetTouch(i).position.x < Screen.width / 2) || (!left && Input.GetTouch(i).position.x > Screen.width / 2)) {
@@ -64,7 +57,7 @@ public class InnerJoystick : MonoBehaviour
 					outerScript.Hide ();
 				}
 			}
-		}
+		
 	}
 
 	void MoveJoystick(Vector2 position){
@@ -84,10 +77,10 @@ public class InnerJoystick : MonoBehaviour
 		
 		img.rectTransform.anchoredPosition = new Vector2 (input.x * (img.rectTransform.sizeDelta.x / 1.5f), input.y * (img.rectTransform.sizeDelta.y / 1.5f));
 
-		if (left)
-			PlayerController.Instance.leftStickVec = input;
-		else
-			PlayerController.Instance.rightStickVec = input;
+		//if (left)
+		//	PlayerController.Instance.leftStickVec = input;
+		//else
+		//	PlayerController.Instance.rightStickVec = input;
 	}
 
 	public void Show(){
@@ -103,10 +96,10 @@ public class InnerJoystick : MonoBehaviour
 	}
 
 	void ResetStick(){
-		if (left)
-			PlayerController.Instance.leftStickVec = Vector3.zero;
-		else
-			PlayerController.Instance.rightStickVec = Vector3.zero;
+		//if (left)
+		//	PlayerController.Instance.leftStickVec = Vector3.zero;
+		//else
+		//	PlayerController.Instance.rightStickVec = Vector3.zero;
 	}
 
 	public Vector3 GetDiscrete(){//vector3 vec

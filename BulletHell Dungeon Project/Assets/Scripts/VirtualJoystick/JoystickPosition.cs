@@ -13,19 +13,12 @@ public class JoystickPosition : MonoBehaviour, IPointerDownHandler
 
 	private Image img;
 
-	#if UNITY_IOS || UNITY_ANDROID
-	private bool enableJoysticks = true;
-	#else
-	private bool enableJoysticks = false;
-	#endif
-
 	void Start(){
 		img = transform.GetChild (0).GetComponent<Image> ();
 		Hide ();
 	}
 
 	public virtual void OnPointerDown(PointerEventData ped){
-		if (enableJoysticks) {
 			Show ();
 			Vector2 pos = Vector2.zero;
 			if (RectTransformUtility.ScreenPointToLocalPointInRectangle (
@@ -36,7 +29,7 @@ public class JoystickPosition : MonoBehaviour, IPointerDownHandler
 			    )) {
 				img.rectTransform.anchoredPosition = pos;
 			}
-		}
+		
 	}
 
 	public void Show(){

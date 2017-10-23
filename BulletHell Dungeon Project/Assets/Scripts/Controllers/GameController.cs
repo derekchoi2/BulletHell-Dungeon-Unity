@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -17,6 +15,9 @@ public class GameController : MonoBehaviour {
 
 		DontDestroyOnLoad(gameObject);
 	}
+
+	public GameObject LeftJoystick;
+	public GameObject RightJoystick;
 
 	public Boundary boundary;
 	public Text scoreText;
@@ -44,6 +45,14 @@ public class GameController : MonoBehaviour {
 		levelController = LevelController.Instance;
 		playerController = PlayerController.Instance;
 		levelController.NewLevel ((levelController.hub)? DoorTypes.hub : DoorTypes.nextLevel, level, sublevel);
+
+#if UNITY_ANDROID || UNITY_IOS
+		LeftJoystick.SetActive(true);
+		RightJoystick.SetActive(true);
+#else
+		LeftJoystick.SetActive(false);
+		RightJoystick.SetActive(false);
+#endif
 
 		CloseBank ();
 	}

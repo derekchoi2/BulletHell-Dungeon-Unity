@@ -39,7 +39,7 @@ public class PickupController : MonoBehaviour {
 	public void NewPickup(Vector3 position){
 		if (Random.Range (0, 100) <= DropChance) {
 			//see if enemy drops an item according to DropChance
-			spawnedPickups.Add(Instantiate (Pickups [(int)RandomPickupType()].gameObject, position, Quaternion.identity));
+			spawnedPickups.Add(Instantiate (Pickups.Find(p => p.type == RandomPickupType()).gameObject, position, Quaternion.identity));
 		}
 	}
 
@@ -63,6 +63,7 @@ public class PickupController : MonoBehaviour {
 		int weight = 0;
 		foreach (Pickup p in Pickups) {
 			if (p.RelativeRarity > 0 && p.type != PlayerController.Instance.CurrentWeapon.GetComponent<Weapon> ().PickupType) {
+				//add if pickup isn't current weapon, so current weapon won't be dropped
 
 				if (p.type != PickupTypes.sentry || (p.type == PickupTypes.sentry && DropSentry ())) {
 					//add if not a sentry. If it is a sentry check that it can drop

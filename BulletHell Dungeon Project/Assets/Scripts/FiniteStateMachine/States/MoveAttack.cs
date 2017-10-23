@@ -33,7 +33,7 @@ public class MoveAttack : State {
 				//move back animation
 				animator.ChangeState (state, moveDir);
 			} else {
-				animator.ChangeState (States.Attack, weaponDir); //character faces the direction the gun is aimed
+				animator.ChangeState (States.Move, weaponDir); //character faces the direction the gun is aimed
 			}
 				
 			player.CurrentWeaponScript.ChangeState (States.Attack, weaponDir);
